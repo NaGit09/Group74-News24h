@@ -1,0 +1,8 @@
+Quy tắc code trong project 
+- Tên component :  PascalCase
+- Tên biến : camelCase
+- Tên hàm : camelCase ( bắt đầu bằng động từ get , has , is)
+- Tên slice : tên + Slice 
+
+Các slice tạo trong folder store 
+và đăng ký slice trong file root.store.ts
