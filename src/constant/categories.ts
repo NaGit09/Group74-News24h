@@ -1,47 +1,86 @@
-export const RSS_CATEGORIES = [
-    {url: "/api/rss/tintuctrongngay.rss", category: "Tin tức"},
-    {url: "/api/rss/bongda.rss", category: "Bóng đá"},
-    {url: "/api/rss/asiancup2019.rss", category: "Asian Cup"},
-    {url: "/api/rss/anninhhinhsu.rss", category: "An ninh"},
-    {url: "/api/rss/thoitrang.rss", category: "Thời trang"},
-    {url: "/api/rss/thoitranghitech.rss", category: "Hi-tech"},
-    {url: "/api/rss/taichinhbatdongsan.rss", category: "Kinh doanh"},
-    {url: "/api/rss/amthuc.rss", category: "Ẩm thực"},
-    {url: "/api/rss/lamdep.rss", category: "Làm đẹp"},
-    {url: "/api/rss/phim.rss", category: "Phim"},
-    {url: "/api/rss/giaoducduhoc.rss", category: "Giáo dục"},
-    {url: "/api/rss/bantrecuocsong.rss", category: "Bạn trẻ"},
-    {url: "/api/rss/canhacmtv.rss", category: "Ca nhạc"},
-    {url: "/api/rss/thethao.rss", category: "Thể thao"},
-    {url: "/api/rss/phithuongkyquac.rss", category: "Phi thường"},
-    {url: "/api/rss/congnghethongtin.rss", category: "Công nghệ"},
-    {url: "/api/rss/oto.rss", category: "Ô tô"},
-    {url: "/api/rss/thitruongtieudung.rss", category: "Thị trường"},
-    {url: "/api/rss/dulich.rss", category: "Du lịch"},
-    {url: "/api/rss/suckhoedoisong.rss", category: "Sức khỏe"},
-    {url: "/api/rss/cuoi24h.rss", category: "Cười"},
-] as const;
+export interface CategoryConfig {
+    name: string;
+    slug: string;
+    rssUrl: string;
+    description?: string;
+}
 
-export const CATEGORY_URL_MAP: Record<string, string> = {
-    "Tin tức": "/api/rss/tintuctrongngay.rss",
-    "Bóng đá": "/api/rss/bongda.rss",
-    "Asian Cup": "/api/rss/asiancup2019.rss",
-    "An ninh": "/api/rss/anninhhinhsu.rss",
-    "Thời trang": "/api/rss/thoitrang.rss",
-    "Hi-tech": "/api/rss/thoitranghitech.rss",
-    "Kinh doanh": "/api/rss/taichinhbatdongsan.rss",
-    "Ẩm thực": "/api/rss/amthuc.rss",
-    "Làm đẹp": "/api/rss/lamdep.rss",
-    "Phim": "/api/rss/phim.rss",
-    "Giáo dục": "/api/rss/giaoducduhoc.rss",
-    "Bạn trẻ": "/api/rss/bantrecuocsong.rss",
-    "Ca nhạc": "/api/rss/canhacmtv.rss",
-    "Thể thao": "/api/rss/thethao.rss",
-    "Phi thường": "/api/rss/phithuongkyquac.rss",
-    "Công nghệ": "/api/rss/congnghethongtin.rss",
-    "Ô tô": "/api/rss/oto.rss",
-    "Thị trường": "/api/rss/thitruongtieudung.rss",
-    "Du lịch": "/api/rss/dulich.rss",
-    "Sức khỏe": "/api/rss/suckhoedoisong.rss",
-    "Cười": "/api/rss/cuoi24h.rss",
-};
+export const CATEGORIES: CategoryConfig[] = [
+    {name: "Tin tức", slug: "tin-tuc", rssUrl: "/api/rss/tintuctrongngay.rss"},
+    {name: "Bóng đá", slug: "bong-da", rssUrl: "/api/rss/bongda.rss"},
+    {name: "An ninh", slug: "an-ninh", rssUrl: "/api/rss/anninhhinhsu.rss"},
+    {name: "Thời trang", slug: "thoi-trang", rssUrl: "/api/rss/thoitrang.rss"},
+    {name: "Hi-tech", slug: "hi-tech", rssUrl: "/api/rss/thoitranghitech.rss"},
+    {name: "Kinh doanh", slug: "kinh-doanh", rssUrl: "/api/rss/taichinhbatdongsan.rss"},
+    {name: "Ẩm thực", slug: "am-thuc", rssUrl: "/api/rss/amthuc.rss"},
+    {name: "Làm đẹp", slug: "lam-dep", rssUrl: "/api/rss/lamdep.rss"},
+    {name: "Phim", slug: "phim", rssUrl: "/api/rss/phim.rss"},
+    {name: "Giáo dục", slug: "giao-duc", rssUrl: "/api/rss/giaoducduhoc.rss"},
+    {name: "Bạn trẻ", slug: "ban-tre", rssUrl: "/api/rss/bantrecuocsong.rss"},
+    {name: "Ca nhạc", slug: "ca-nhac", rssUrl: "/api/rss/canhacmtv.rss"},
+    {name: "Thể thao", slug: "the-thao", rssUrl: "/api/rss/thethao.rss"},
+    {name: "Phi thường", slug: "phi-thuong", rssUrl: "/api/rss/phithuongkyquac.rss"},
+    {name: "Công nghệ", slug: "cong-nghe", rssUrl: "/api/rss/congnghethongtin.rss"},
+    {name: "Ô tô", slug: "o-to", rssUrl: "/api/rss/oto.rss"},
+    {name: "Thị trường", slug: "thi-truong", rssUrl: "/api/rss/thitruongtieudung.rss"},
+    {name: "Du lịch", slug: "du-lich", rssUrl: "/api/rss/dulich.rss"},
+    {name: "Sức khỏe", slug: "suc-khoe", rssUrl: "/api/rss/suckhoedoisong.rss"},
+    {name: "Cười", slug: "cuoi", rssUrl: "/api/rss/cuoi24h.rss"},
+];
+
+export const CATEGORY_BY_SLUG = new Map<string, CategoryConfig>(
+    CATEGORIES.map(cat => [cat.slug, cat])
+);
+
+export const CATEGORY_BY_NAME = new Map<string, CategoryConfig>(
+    CATEGORIES.map(cat => [cat.name, cat])
+);
+
+export const CATEGORY_URL_MAP: Record<string, string> = Object.fromEntries(
+    CATEGORIES.map(cat => [cat.name, cat.rssUrl])
+);
+
+export const RSS_CATEGORIES = CATEGORIES.map(cat => ({
+    url: cat.rssUrl,
+    category: cat.name
+}));
+
+export function getCategoryBySlug(slug: string): CategoryConfig | undefined {
+    return CATEGORY_BY_SLUG.get(slug);
+}
+
+export function getCategoryByName(name: string): CategoryConfig | undefined {
+    return CATEGORY_BY_NAME.get(name);
+}
+
+export function getCategoryName(slug: string): string | null {
+    return CATEGORY_BY_SLUG.get(slug)?.name || null;
+}
+
+export function getRssUrl(categoryName: string): string | null {
+    return CATEGORY_BY_NAME.get(categoryName)?.rssUrl || null;
+}
+
+export function getCategorySlug(name: string): string {
+    return name
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/đ/g, "d")
+        .replace(/[^a-z0-9\s-]/g, "")
+        .replace(/\s+/g, "-")
+        .replace(/-+/g, "-")
+        .replace(/^-|-$/g, "");
+}
+
+export function isValidCategorySlug(slug: string): boolean {
+    return CATEGORY_BY_SLUG.has(slug);
+}
+
+export function getAllCategoryNames(): string[] {
+    return CATEGORIES.map(cat => cat.name);
+}
+
+export function getAllCategorySlugs(): string[] {
+    return CATEGORIES.map(cat => cat.slug);
+}
