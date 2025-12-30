@@ -1,11 +1,13 @@
 import {Link} from "react-router"
 import {useState} from "react"
 import {Menu} from "lucide-react"
-import { getCategorySlug } from "@/lib/category-utils"
+import { CATEGORIES } from "@/constant/categories"
 
-const categories = [
+// Menu categories với sub-items (có thể hardcode sub-items)
+const menuCategories = [
     {
         name: "Tin tức",
+        slug: "tin-tuc",
         items: [
             "Tin tức trong ngày",
             "Xã hội",
@@ -19,6 +21,7 @@ const categories = [
     },
     {
         name: "Bóng đá",
+        slug: "bong-da",
         items: [
             "Lịch thi đấu bóng đá",
             "Video highlight",
@@ -31,7 +34,45 @@ const categories = [
         ],
     },
     {
+        name: "An ninh",
+        slug: "an-ninh",
+        items: [
+            "An ninh trật tự",
+            "Pháp luật",
+            "Hình sự",
+            "Điều tra",
+            "Phòng chống tội phạm",
+            "Giao thông",
+        ],
+    },
+    {
+        name: "Thời trang",
+        slug: "thoi-trang",
+        items: [
+            "Xu hướng thời trang",
+            "Thời trang sao",
+            "Làm đẹp",
+            "Phong cách",
+            "Thời trang nam",
+            "Thời trang nữ",
+        ],
+    },
+    {
+        name: "Hi-tech",
+        slug: "hi-tech",
+        items: [
+            "Công nghệ AI",
+            "Điện thoại",
+            "Laptop",
+            "Game",
+            "Thời trang Hi-tech",
+            "Khoa học",
+            "Đánh giá sản phẩm",
+        ],
+    },
+    {
         name: "Kinh doanh",
+        slug: "kinh-doanh",
         items: [
             "Kinh tế thế giới",
             "Bất động sản",
@@ -44,36 +85,176 @@ const categories = [
         ],
     },
     {
-        name: "Giải trí",
-        items: ["Đời sống Showbiz", "Sao Việt", "Sao Châu Á", "Nhạc", "Phim", "TV Show"],
+        name: "Ẩm thực",
+        slug: "am-thuc",
+        items: [
+            "Món ngon mỗi ngày",
+            "Ẩm thực Việt",
+            "Ẩm thực thế giới",
+            "Công thức nấu ăn",
+            "Nhà hàng",
+            "Đặc sản vùng miền",
+        ],
     },
     {
-        name: "24h Thích bóng đá - Thể thao",
-        items: ["Thích bóng đá", "Thể thao", "Tin tức thể thao", "Video thể thao"],
+        name: "Làm đẹp",
+        slug: "lam-dep",
+        items: [
+            "Chăm sóc da",
+            "Trang điểm",
+            "Chăm sóc tóc",
+            "Spa & Massage",
+            "Mỹ phẩm",
+            "Làm đẹp tự nhiên",
+        ],
     },
     {
-        name: "Sức khỏe",
-        items: ["Sức khỏe dinh dưỡng", "Tin tức sức khỏe", "Phát minh y học", "Ẩm thực", "Du lịch"],
+        name: "Phim",
+        slug: "phim",
+        items: [
+            "Phim chiếu rạp",
+            "Phim Việt Nam",
+            "Phim Hollywood",
+            "Phim Hàn Quốc",
+            "Review phim",
+            "Lịch chiếu phim",
+        ],
     },
     {
-        name: "Hi-tech",
-        items: ["Công nghệ AI", "Điện thoại", "Laptop", "Game", "Thời trang Hi-tech", "Khoa học"],
+        name: "Giáo dục",
+        slug: "giao-duc",
+        items: [
+            "Tin tức giáo dục",
+            "Tuyển sinh",
+            "Du học",
+            "Học bổng",
+            "Kỹ năng học tập",
+            "Đào tạo nghề",
+        ],
     },
     {
-        name: "Thế giới",
-        items: ["Điểm nóng", "Quân sự", "Theo dòng lịch sử", "Cung đình Trung Hoa", "Dài kỳ"],
+        name: "Bạn trẻ",
+        slug: "ban-tre",
+        items: [
+            "Cuộc sống trẻ",
+            "Tình yêu",
+            "Học đường",
+            "Công việc",
+            "Giải trí",
+            "Xu hướng giới trẻ",
+        ],
+    },
+    {
+        name: "Ca nhạc",
+        slug: "ca-nhac",
+        items: [
+            "Nhạc Việt",
+            "Nhạc quốc tế",
+            "V-Pop",
+            "K-Pop",
+            "MV mới",
+            "Liveshow",
+        ],
     },
     {
         name: "Thể thao",
-        items: ["Tennis", "Pickleball", "Bóng chuyền", "Võ thuật - UFC", "Golf", "F1", "Billiards"],
+        slug: "the-thao",
+        items: [
+            "Tennis",
+            "Pickleball",
+            "Bóng chuyền",
+            "Võ thuật - UFC",
+            "Golf",
+            "F1",
+            "Billiards",
+            "Cầu lông",
+        ],
+    },
+    {
+        name: "Phi thường",
+        slug: "phi-thuong",
+        items: [
+            "Chuyện lạ",
+            "Khám phá",
+            "Bí ẩn",
+            "Siêu nhiên",
+            "Kỳ quặc",
+        ],
+    },
+    {
+        name: "Công nghệ",
+        slug: "cong-nghe",
+        items: [
+            "Tin công nghệ",
+            "AI & Machine Learning",
+            "Blockchain",
+            "Internet of Things",
+            "Startup công nghệ",
+            "Bảo mật",
+        ],
     },
     {
         name: "Ô tô",
-        items: ["Tin tức ô tô", "Bảng giá xe", "Tư vấn", "Xe xanh", "Đánh giá xe", "Xe máy"],
+        slug: "o-to",
+        items: [
+            "Tin tức ô tô",
+            "Bảng giá xe",
+            "Tư vấn mua xe",
+            "Xe xanh",
+            "Đánh giá xe",
+            "Xe máy",
+            "Phụ kiện",
+        ],
+    },
+    {
+        name: "Thị trường",
+        slug: "thi-truong",
+        items: [
+            "Thị trường tiêu dùng",
+            "Giá cả",
+            "Sản phẩm mới",
+            "Khuyến mãi",
+            "Xu hướng tiêu dùng",
+        ],
+    },
+    {
+        name: "Du lịch",
+        slug: "du-lich",
+        items: [
+            "Điểm đến",
+            "Du lịch Việt Nam",
+            "Du lịch nước ngoài",
+            "Kinh nghiệm du lịch",
+            "Khách sạn",
+            "Tour du lịch",
+        ],
+    },
+    {
+        name: "Sức khỏe",
+        slug: "suc-khoe",
+        items: [
+            "Sức khỏe dinh dưỡng",
+            "Tin tức sức khỏe",
+            "Phát minh y học",
+            "Bệnh thường gặp",
+            "Chăm sóc sức khỏe",
+            "Y học cổ truyền",
+        ],
+    },
+    {
+        name: "Cười",
+        slug: "cuoi",
+        items: [
+            "Ảnh hài",
+            "Video hài",
+            "Truyện cười",
+            "Hài kịch",
+            "Giải trí",
+        ],
     },
 ]
 
-export function MegaMenu({isScrolled = false}: { isScrolled?: boolean }) {
+export function MegaMenu() {
     const [activeMenu, setActiveMenu] = useState<string | null>(null)
     const [showAllCategories, setShowAllCategories] = useState(false)
 
@@ -88,6 +269,7 @@ export function MegaMenu({isScrolled = false}: { isScrolled?: boolean }) {
                         <span className="text-base font-medium tracking-tight whitespace-nowrap ml-1.5">TIN TỨC</span>
                     </Link>
 
+                    {/* Dropdown "Danh mục" - Hiển thị TẤT CẢ categories từ CATEGORIES */}
                     <div
                         className="relative"
                         onMouseEnter={() => setShowAllCategories(true)}
@@ -104,18 +286,20 @@ export function MegaMenu({isScrolled = false}: { isScrolled?: boolean }) {
                         {showAllCategories && (
                             <div
                                 className="absolute top-full left-0 pt-1 z-100 animate-in fade-in slide-in-from-top-2 duration-200">
-                                <div className="w-[800px] bg-background border border-border shadow-2xl rounded-sm">
-                                    <div className="grid grid-cols-3 gap-6 p-6">
-                                        {categories.map((category) => (
-                                            <div key={category.name} className="space-y-2">
+                                <div className="w-[1000px] bg-background border border-border shadow-2xl rounded-sm">
+                                    <div className="grid grid-cols-4 gap-6 p-6">
+                                        {menuCategories.map((category) => (
+                                            <div key={category.slug} className="space-y-2">
                                                 <h3 className="font-bold text-sm text-primary border-b border-border pb-1.5">
-                                                    {category.name}
+                                                    <Link to={`/danh-muc/${category.slug}`} className="hover:underline">
+                                                        {category.name}
+                                                    </Link>
                                                 </h3>
                                                 <ul className="space-y-1.5">
                                                     {category.items.map((item) => (
                                                         <li key={item}>
                                                             <Link
-                                                                to={`/danh-muc/${getCategorySlug(category.name)}`}
+                                                                to={`/danh-muc/${category.slug}`}
                                                                 className="text-sm hover:text-primary transition-all duration-300 block relative group pl-2"
                                                             >
                                                                 {item}
@@ -133,14 +317,15 @@ export function MegaMenu({isScrolled = false}: { isScrolled?: boolean }) {
                         )}
                     </div>
 
-                    {categories.map((category) => (
+                    {/* Navigation bar - Hiển thị nhiều categories hơn cho màn hình lớn */}
+                    {CATEGORIES.slice(0, 15).map((category) => (
                         <div
-                            key={category.name}
+                            key={category.slug}
                             className="relative"
-                            onMouseEnter={() => setActiveMenu(category.name)}
+                            onMouseEnter={() => setActiveMenu(category.slug)}
                             onMouseLeave={() => setActiveMenu(null)}
                         >
-                            <Link to={`/danh-muc/${getCategorySlug(category.name)}`}
+                            <Link to={`/danh-muc/${category.slug}`}
                                   className="px-3 py-2 hover:text-primary transition-all duration-300 whitespace-nowrap relative group block"
                             >
                                 {category.name}
@@ -148,15 +333,16 @@ export function MegaMenu({isScrolled = false}: { isScrolled?: boolean }) {
                                     className="absolute bottom-0 left-3 right-3 h-0.5 bg-primary scale-x-0 group-hover:scale-x-100 transition-transform duration-300 origin-left"/>
                             </Link>
 
-                            {activeMenu === category.name && (
+                            {/* Dropdown cho category có sub-items */}
+                            {activeMenu === category.slug && menuCategories.find(c => c.slug === category.slug) && (
                                 <div
                                     className="absolute top-full left-0 pt-1 z-100 animate-in fade-in slide-in-from-top-2 duration-200">
                                     <div className="w-56 bg-background border border-border shadow-2xl rounded-sm">
                                         <div className="py-1">
-                                            {category.items.map((item) => (
+                                            {menuCategories.find(c => c.slug === category.slug)?.items.map((item) => (
                                                 <Link
                                                     key={item}
-                                                    to={`/danh-muc/${getCategorySlug(category.name)}`}
+                                                    to={`/danh-muc/${category.slug}`}
                                                     className="block px-4 py-2.5 text-sm hover:text-primary transition-all duration-300 relative group"
                                                 >
                                                     {item}

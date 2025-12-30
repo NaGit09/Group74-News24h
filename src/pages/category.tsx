@@ -6,7 +6,7 @@ import { CategoryFilterTabs } from "@/components/common/category-filter-tabs.tsx
 import { Breadcrumbs } from "@/components/layout/breadcrumbs.tsx"
 import { useState, useEffect, useRef } from "react"
 import { useRSSByCategory } from "@/hooks/use-rss"
-import { getCategoryName } from "@/lib/category-utils"
+import { getCategoryName } from "@/constant/categories"
 
 export default function CategoryPage() {
   const { category } = useParams<{ category: string }>()
