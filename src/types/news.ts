@@ -21,7 +21,6 @@ export interface ArticleDetail {
     sapo: string;
     content: string;
 }
-
 export interface ArticleState {
     articles: Article[];
     currentArticle: ArticleDetail | null;
