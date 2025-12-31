@@ -1,0 +1,30 @@
+
+=================== Handle RSS ===================
+1) handle RSS 
+
+get rss with axiosInstance
+
+parse rss with parseXml
+
+get channel
+
+get item form channel
+
+filter item and map to Article
+
+return Article[] , Channel 
+
+
+=================== Handle HTML ===================
+2) handle Article html 
+
+get html article with axiosInstance
+
+load html with cheerio
+
+filter html with id , class name
+
+return sape , title , html content
+
+clean html content
+

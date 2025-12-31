@@ -96,7 +96,7 @@ export default function HomePage() {
     }),
   }))
 
-  const trendingNews = articles.slice(16, 21).map((article, index) => ({
+  const trendingNews = articles.slice(16, 21).map((article, _) => ({
     title: article.title,
     image: article.image && article.image.trim() !== '' ? article.image : "/placeholder.svg",
     href: `/bai-viet/${article.guid}`,
@@ -231,15 +231,11 @@ export default function HomePage() {
             },
             {
               title: "Cao tốc Bắc - Nam hoàn thành đoạn Cam Lộ - La Sơn",
-              sapo: "Công trình này sẽ giảm thời gian đi lại giữa các tỉnh miền Bắc.",
-              image: "/hanoi-road-construction.jpg",
               href: "/bai-viet/cao-toc-bac-nam",
               publishedAt: "5 giờ trước",
             },
             {
               title: "Phát hiện 50 ca nhiễm sởi tại các tỉnh miền Tây",
-              sapo: "Các cơ sở y tế đã triển khai các biện pháp phòng chống dịch bệnh.",
-              image: "/typhoon-storm.jpg",
               href: "/bai-viet/dich-soi",
               publishedAt: "6 giờ trước",
             },
@@ -341,13 +337,11 @@ export default function HomePage() {
             },
             {
               title: "The Weeknd thông báo tour thế giới After Hours Til Dawn",
-              sapo: "Tours sẽ diễn ra tại 10 quốc gia với sự góp mặt của nhiều nghệ sĩ quốc tế.",
               href: "/bai-viet/the-weeknd-tour",
               publishedAt: "6 giờ trước",
             },
             {
               title: "Netflix công bố phần 2 của Squid Game ra mắt tháng 6",
-              sapo: "Phần 2 tiếp tục câu chuyện của các người chơi trong trò chơi Squid Game.",
               href: "/bai-viet/squid-game-season-2",
               publishedAt: "7 giờ trước",
             },
@@ -401,7 +395,6 @@ export default function HomePage() {
             },
             {
               title: "Phát hiện thuốc mới điều trị ung thư phổi giai đoạn cuối",
-              sapo: "Thuốc mới này có thể giúp tăng tỷ lệ sống sót của bệnh nhân ung thư phổi.",
               href: "/bai-viet/thuoc-tri-ung-thu",
               publishedAt: "6 giờ trước",
             },

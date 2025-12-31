@@ -1,39 +1,54 @@
-import { useState, useEffect } from 'react';
-import { getFullArticle } from '@/services/news.service';
-import type { ArticleDetail } from '@/types/news';
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getFullArticle } from "@/services/news.service";
+import {
+  setCurrentArticle,
+  setLoading,
+  setError,
+  clearCurrentArticle,
+} from "@/stores/article.store";
+import type { RootState } from "@/stores/root.store";
 
 export function useArticle(articleUrl: string | undefined) {
-  const [article, setArticle] = useState<ArticleDetail | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const dispatch = useDispatch();
+  const { currentArticle, loading, error } = useSelector(
+    (state: RootState) => state.article
+  );
 
   useEffect(() => {
     if (!articleUrl) {
-      setLoading(false);
+      dispatch(setLoading(false));
       return;
     }
 
-    const fetchArticle = async () => {
+    const loadArticle = async () => {
       try {
-        setLoading(true);
-        setError(null);
+        dispatch(setLoading(true));
+        dispatch(setError(null));
+        dispatch(clearCurrentArticle());
+
         const data = await getFullArticle(articleUrl);
-        
+
         if (data) {
-          setArticle(data);
+          dispatch(setCurrentArticle(data));
         } else {
-          setError('Không thể tải nội dung bài viết');
+          dispatch(setError("Không thể tải nội dung bài viết"));
         }
       } catch (err) {
-        setError('Đã xảy ra lỗi khi tải bài viết');
-        console.error('Error fetching article:', err);
+        dispatch(setError("Đã xảy ra lỗi khi tải bài viết"));
+        console.error("Error fetching article:", err);
       } finally {
-        setLoading(false);
+        dispatch(setLoading(false));
       }
     };
 
-    fetchArticle();
-  }, [articleUrl]);
+    loadArticle();
 
-  return { article, loading, error };
+    return () => {
+      dispatch(clearCurrentArticle());
+      dispatch(setError(null));
+    };
+  }, [articleUrl, dispatch]);
+
+  return { article: currentArticle, loading, error };
 }

@@ -1,61 +1,67 @@
-import { useState, useEffect } from 'react';
-import { fetchAllNews, fetchFeed } from '@/services/news.service';
-import type { Article } from '@/types/news';
-import { CATEGORY_URL_MAP } from '@/constant/categories';
+import { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { getAllNews, getNewsFeed } from "@/services/news.service";
+import { CATEGORY_URL_MAP } from "@/constant/categories";
+import { setArticles, setLoading, setError } from "@/stores/article.store";
+import type { RootState } from "@/stores/root.store";
+
+const TIMEOUT = 5 * 60 * 1000;
 
 export function useRSSFeeds() {
-  const [articles, setArticles] = useState<Article[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
+  const dispatch = useDispatch();
+  const { articles, loading, error } = useSelector(
+    (state: RootState) => state.article
+  );
 
   useEffect(() => {
     let mounted = true;
 
     async function loadFeeds() {
       try {
-        setLoading(true);
-        const data = await fetchAllNews();
-        
+        dispatch(setLoading(true));
+        const data = await getAllNews();
+
         if (mounted) {
-          setArticles(data);
-          setError(null);
+          dispatch(setArticles(data));
+          dispatch(setError(null));
         }
       } catch (err) {
         if (mounted) {
-          setError(err as Error);
+          dispatch(
+            setError(err instanceof Error ? err.message : "Unknown error")
+          );
         }
       } finally {
         if (mounted) {
-          setLoading(false);
+          dispatch(setLoading(false));
         }
       }
     }
 
     loadFeeds();
-
-    // Refresh every 5 minutes
-    const interval = setInterval(loadFeeds, 5 * 60 * 1000);
+    const interval = setInterval(loadFeeds, TIMEOUT);
 
     return () => {
       mounted = false;
       clearInterval(interval);
     };
-  }, []);
+  }, [dispatch]);
 
-  return { articles, loading, error };
+  // Convert string error from Redux back to Error object to maintain hook API compatibility
+  return { articles, loading, error: error ? new Error(error) : null };
 }
 
 export function useRSSByCategory(category: string) {
-  const [articles, setArticles] = useState<Article[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<Error | null>(null);
-
+  const dispatch = useDispatch();
+  const { articles, loading, error } = useSelector(
+    (state: RootState) => state.article
+  );
   const categoryUrl = CATEGORY_URL_MAP[category];
 
   useEffect(() => {
     if (!categoryUrl) {
-      setError(new Error(`Không tìm thấy category: ${category}`));
-      setLoading(false);
+      dispatch(setError(`Không tìm thấy category: ${category}`));
+      dispatch(setLoading(false));
       return;
     }
 
@@ -63,34 +69,34 @@ export function useRSSByCategory(category: string) {
 
     async function loadFeeds() {
       try {
-        setLoading(true);
-        const feed = await fetchFeed(categoryUrl, category);
-        
+        dispatch(setLoading(true));
+        const feed = await getNewsFeed(category);
+
         if (mounted) {
-          setArticles(feed?.articles || []);
-          setError(null);
+          dispatch(setArticles(feed?.articles || []));
+          dispatch(setError(null));
         }
       } catch (err) {
         if (mounted) {
-          setError(err as Error);
+          dispatch(
+            setError(err instanceof Error ? err.message : "Unknown error")
+          );
         }
       } finally {
         if (mounted) {
-          setLoading(false);
+          dispatch(setLoading(false));
         }
       }
     }
 
     loadFeeds();
-
-    // Refresh every 5 minutes
-    const interval = setInterval(loadFeeds, 5 * 60 * 1000);
+    const interval = setInterval(loadFeeds, TIMEOUT);
 
     return () => {
       mounted = false;
       clearInterval(interval);
     };
-  }, [category, categoryUrl]);
+  }, [category, categoryUrl, dispatch]);
 
-  return { articles, loading, error };
+  return { articles, loading, error: error ? new Error(error) : null };
 }

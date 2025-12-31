@@ -1,15 +1,14 @@
-
-import { useParams } from "react-router"
-import { Breadcrumbs } from "@/components/layout/breadcrumbs.tsx"
-import { CategoryFilterTabs } from "@/components/common/category-filter-tabs.tsx"
+import { Link, useParams } from "react-router";
+import { Breadcrumbs } from "@/components/layout/breadcrumbs.tsx";
+import { CategoryFilterTabs } from "@/components/common/category-filter-tabs.tsx";
 
 export default function TagPage() {
-  const { tag } = useParams<{ tag: string }>()
+  const { tag } = useParams<{ tag: string }>();
   const tagName = (tag || "")
     .replace(/-/g, " ")
     .split(" ")
     .map((w) => w.charAt(0).toUpperCase() + w.slice(1))
-    .join(" ")
+    .join(" ");
 
   const articles = [
     {
@@ -22,7 +21,7 @@ export default function TagPage() {
       slug: "gia-vang-sjc-tang",
     },
     // More articles...
-  ]
+  ];
 
   return (
     <div className="bg-background">
@@ -30,20 +29,29 @@ export default function TagPage() {
         <Breadcrumbs
           items={[
             { label: "Trang chủ", href: "/" },
-            { label: `Tag: ${tagName}`, href: `/tag/${params.tag}` },
+            { label: `Tag: ${tagName}`, href: `/tag/${tag}` },
           ]}
         />
 
         <div className="mt-6">
-          <h1 className="text-3xl font-bold text-foreground mb-2">Bài viết về: {tagName}</h1>
-          <p className="text-muted-foreground mb-6">{articles.length} bài viết được gắn tag này</p>
+          <h1 className="text-3xl font-bold text-foreground mb-2">
+            Bài viết về: {tagName}
+          </h1>
+          <p className="text-muted-foreground mb-6">
+            {articles.length} bài viết được gắn tag này
+          </p>
 
-          <CategoryFilterTabs />
+          <CategoryFilterTabs
+            onFilterChange={(filter) => console.log(filter)}
+          />
 
           <div className="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {articles.map((article) => (
-              <article key={article.id} className="group border-b border-border pb-6">
-                <a to={`/bai-viet/${article.slug}`} className="block">
+              <article
+                key={article.id}
+                className="group border-b border-border pb-6"
+              >
+                <Link to={`/bai-viet/${article.slug}`} className="block">
                   <img
                     src={article.image || "/placeholder.svg"}
                     alt={article.title}
@@ -52,20 +60,20 @@ export default function TagPage() {
                   <h2 className="text-lg font-bold text-foreground group-hover:text-primary transition-colors line-clamp-2 mb-2">
                     {article.title}
                   </h2>
-                  <p className="text-sm text-muted-foreground line-clamp-2 mb-2">{article.sapo}</p>
+                  <p className="text-sm text-muted-foreground line-clamp-2 mb-2">
+                    {article.sapo}
+                  </p>
                   <div className="flex items-center gap-2 text-xs text-muted-foreground">
                     <span>{article.category}</span>
                     <span>•</span>
                     <span>{article.time}</span>
                   </div>
-                </a>
+                </Link>
               </article>
             ))}
           </div>
         </div>
       </div>
     </div>
-  )
+  );
 }
-
-
