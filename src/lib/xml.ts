@@ -1,29 +1,54 @@
-import { type Category } from "@/types/rss";
+import type { Article } from '@/types/news';
+import type { RawArticle, RawChannel } from '@/types/raw';
+import { XMLParser } from 'fast-xml-parser';
 
-export const handleXml = (data: string) => {
-    const doc: Document = new DOMParser().parseFromString(data, "text/xml");
+// parse xml to json
+const xmlParser = new XMLParser({
+    ignoreAttributes: false,
+    attributeNamePrefix: "@_",
+    processEntities: true,
+    trimValues: true,
+});
 
-    const feed: Category = {
-        title: doc.querySelector("channel > title")?.textContent ?? "",
-        description: doc.querySelector("channel > description")?.textContent ?? "",
-        generator: doc.querySelector("channel > generator")?.textContent ?? "",
-        link: doc.querySelector("channel > link")?.textContent ?? "",
-        language: doc.querySelector("channel > language")?.textContent ?? "",
-        copyright: doc.querySelector("channel > copyright")?.textContent ?? "",
-        ttl: Number(doc.querySelector("channel > ttl")?.textContent ?? 0),
-        pubDate: doc.querySelector("channel > pubDate")?.textContent ?? "",
-        image: {
-            url: doc.querySelector("channel > image > url")?.textContent ?? "",
-            title: doc.querySelector("channel > image > title")?.textContent ?? "",
-            link: doc.querySelector("channel > image > link")?.textContent ?? "",
-        },
-        items: Array.from(doc.querySelectorAll("channel > item")).map((item) => ({
-            title: item.querySelector("title")?.textContent ?? "",
-            link: item.querySelector("link")?.textContent ?? "",
-            pubDate: item.querySelector("pubDate")?.textContent ?? "",
-            description: item.querySelector("description")?.textContent ?? "",
-            guid: item.querySelector("guid")?.textContent ?? "",
-        })),
-    };
-    return feed;
+// extract slug from url
+export function extractSlug(url: string): string {
+    const match = url.match(/\/([^/]+)\.(html|chn)$/);
+    return match?.[1] || url.split("/").filter(Boolean).pop() || "";
+}
+
+// parse xml to json
+export const parseXml = (xmlText: string) => {
+
+    const result = xmlParser.parse(xmlText);
+
+    const channel = result.rss?.channel as RawChannel | undefined;
+
+    if (!channel) return null;
+
+    const rawItems = channel.item;
+    
+    const items: RawArticle[] = Array.isArray(rawItems)
+        ? rawItems
+        : rawItems ? [rawItems] : [];
+
+    const articles: Article[] = items
+        .filter((i): i is RawArticle & { title: string } => typeof i?.title === 'string')
+        .map((item) => {
+            const rawDesc = typeof item.description === 'object'
+                ? item.description['#text']
+                : (item.description || '');
+
+            const imgMatch = rawDesc.match(/<img[^>]+src=['"]?([^'"\s>]+)/i);
+
+            return {
+                title: item.title,
+                link: item.link || '',
+                description: rawDesc.replace(/<[^>]*>/g, '').trim(),
+                pubDate: item.pubDate || new Date().toISOString(),
+                category: channel.title,
+                image: imgMatch ? imgMatch[1] : '/placeholder.svg',
+                guid: extractSlug(item.link || ''),
+            };
+        });
+    return {channel,articles};
 }

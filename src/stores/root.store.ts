@@ -1,9 +1,10 @@
 import { configureStore } from '@reduxjs/toolkit';
-import newsReducer from './news.store';
+import articleReducer from './article.store';
+
 // register root store
 export const store = configureStore({
     reducer: {
-        news: newsReducer,
+        article: articleReducer,
     },
 });
 

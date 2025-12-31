@@ -1,120 +1,53 @@
-import type { Image } from "@/types/image";
-import type { NewsDetail } from "@/types/news";
-import axios from "axios";
 import * as cheerio from "cheerio";
 
-export async function crawlArticle(url: string): Promise<NewsDetail> {
-    const { data: html } = await axios.get(url);
+export const parseHtml = (html: string) => {
+  const $ = cheerio.load(html);
 
-    const $ = cheerio.load(html);
+    const title = $("#article_title").text().trim();
+    
+    const sapo = $("#article_sapo").text().trim();
+    
+    const articleContainer = $(".cate-24h-foot-arti-deta-info");
+    
+    articleContainer.find("script, style, iframe, .bv-lq, .view-more").remove();
 
-    const title =
-        $("h1.title-detail").first().text().trim() ||
-        $("h1").first().text().trim();
+    articleContainer.find("img").each(function () {
+    const $img = $(this);
+    let src = $img.attr("data-original") || $img.attr("src");
 
-    const description =
-        $("p.description").first().text().trim() ||
-        $('meta[name="description"]').attr("content") ||
-        "";
-
-    const publishedAt = $(".header-content .date").first().text().trim();
-
-    const article = $(".cate-24h-foot-arti-deta-info").first().clone();
-
-    if (!article.length) {
-        throw new Error("Article content not found");
+    if (src && src.includes("in-image-close.svg")) {
+      $img.remove();
+      return;
     }
 
-    article.find(`
-        script,
-        style,
-        iframe,
-        ins,
-        meta,
-        link,
-        .social,
-        .action_thumb,
-        .embed-container-ads,
-        .box-ads,
-        [id^="ADS_"],
-        [class*="ads"],
-        [class*="Ads"]
-    `).remove();
+    if (src?.startsWith("/")) src = `https://cdn.24h.com.vn${src}`;
+    $img
+      .attr("src", src || "")
+      .attr("class", "img-fluid rounded my-3 d-block mx-auto");
+  });
+  return {
+    title,
+    sapo,
+    content: articleContainer.html() || "",
+  };
+};
 
-    article.find("noscript").remove();
+export function cleanHtmlContent(html: string): string {
+    const $ = cheerio.load(html, null, false);
 
-
-    article.find("img").each((_, el) => {
-        const $img = $(el);
-
-        const src = $img.attr("src");
-        const dataSrc =
-            $img.attr("data-src") ||
-            $img.attr("data-original") ||
-            $img.attr("data-lazy-src");
-
-        if (
-            (!src || src.startsWith("data:image")) &&
-            dataSrc
-        ) {
-            $img.attr("src", dataSrc);
-        }
-
-        const finalSrc = $img.attr("src");
-        if (finalSrc?.startsWith("/")) {
-            $img.attr("src", new URL(url).origin + finalSrc);
-        }
-
-        $img.removeAttr("data-src");
-        $img.removeAttr("data-original");
-        $img.removeAttr("data-lazy-src");
-        $img.removeAttr("loading");
-        $img.removeAttr("referrerpolicy");
-    });
-
-
-    article.find("video source").each((_, el) => {
-        const $source = $(el);
-        const src =
-            $source.attr("src") ||
-            $source.attr("data-src") ||
-            $source.attr("data-original");
-
-        if (src) $source.attr("src", src);
-
-        $source.removeAttr("data-src");
-        $source.removeAttr("data-original");
-    });
-
-    const author =
-        article
-            .find('p[style*="text-align:right"] strong')
-            .first()
-            .text()
-            .trim() || "";
-
-    const contentHtml = article.html();
-    if (!contentHtml) {
-        throw new Error("Content HTML empty");
-    }
-
-    const images: Image[] = [];
-    article.find("img").each((_, img) => {
-        const src = $(img).attr("src");
-        if (src) {
-            images.push({
-                src,
-                alt: $(img).attr("alt") || ""
+    $("*").each(function () {
+        const $el = $(this);
+        const keep = ["src", "alt", "class", "href"];
+        const currentAttrs = $el.attr();
+        if (currentAttrs) {
+            Object.keys(currentAttrs).forEach((attrName) => {
+                if (!keep.includes(attrName)) $el.removeAttr(attrName);
             });
         }
     });
 
-    return {
-        title,
-        description,
-        publishedAt,
-        author,
-        contentHtml,
-        images
-    };
+    return $.html()
+        .replace(/<(div|span|section|article)[^>]*>/gi, "")
+        .replace(/<\/(div|span|section|article)>/gi, "")
+        .trim();
 }
