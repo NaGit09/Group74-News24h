@@ -47,7 +47,8 @@ export function useRSSFeeds() {
     };
   }, [dispatch]);
 
-  return { articles, loading, error };
+  // Convert string error from Redux back to Error object to maintain hook API compatibility
+  return { articles, loading, error: error ? new Error(error) : null };
 }
 
 export function useRSSByCategory(category: string) {
