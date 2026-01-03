@@ -1,0 +1,16 @@
+{
+  "rewrites": [
+    {
+      "source": "/api/rss/:match*",
+      "destination": "https://cdn.24h.com.vn/upload/rss/:match*"
+    },
+    {
+      "source": "/api/:match*",
+      "destination": "https://www.24h.com.vn/:match*"
+    },
+    {
+      "source": "/(.*)",
+      "destination": "/index.html"
+    }
+  ]
+}
