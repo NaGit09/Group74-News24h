@@ -30,7 +30,6 @@ export function ArticleMeta({
   viewCount = 4532,
   shareCount = 342,
 }: ArticleMetaProps) {
-    
   const [isSaved, setIsSaved] = useState(false);
   const [isReading, setIsReading] = useState(false);
   const [localShareCount, setLocalShareCount] = useState(shareCount);
@@ -67,7 +66,6 @@ export function ArticleMeta({
 
   const handleShare = (platform: string) => {
     const url = window.location.href;
-    const title = document.title;
 
     setLocalShareCount((prev) => prev + 1);
 

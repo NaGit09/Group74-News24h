@@ -25,10 +25,6 @@ export default function CategoryPage() {
 
   const categoryName = getCategoryName(category || "") || "";
 
-  if (!categoryName) {
-    return <NotFound />;
-  }
-
   const {
     articles,
     loading: rssLoading,
@@ -54,6 +50,16 @@ export default function CategoryPage() {
     }
   }, [articles]);
 
+  const loadMore = () => {
+    const nextNews = articles.slice(page * 10, (page + 1) * 10);
+    if (nextNews.length > 0) {
+      setDisplayedNews((prev) => [...prev, ...nextNews]);
+      setPage((prev) => prev + 1);
+    } else {
+      setHasMore(false);
+    }
+  };
+
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
@@ -71,15 +77,9 @@ export default function CategoryPage() {
     return () => observer.disconnect();
   }, [hasMore, loading, page]);
 
-  const loadMore = () => {
-    const nextNews = articles.slice(page * 10, (page + 1) * 10);
-    if (nextNews.length > 0) {
-      setDisplayedNews((prev) => [...prev, ...nextNews]);
-      setPage((prev) => prev + 1);
-    } else {
-      setHasMore(false);
-    }
-  };
+  if (!categoryName) {
+    return <NotFound />;
+  }
 
   if (loading) {
     return <Loading />;

@@ -1,6 +1,6 @@
-import type { CategoryItem } from "@/types/rss";
+import type { Article } from "@/types/news";
 
-interface CategoryArticleProps extends CategoryItem {
+interface CategoryArticleProps extends Article {
   category: string;
 }
 
@@ -10,9 +10,7 @@ const CategoryArticle = ({
   pubDate,
   description,
   category,
-}:
-  CategoryArticleProps) => {
-  
+}: CategoryArticleProps) => {
   const imgMatch = description?.match(/src=["']([^"']+)['"]/);
   const imageUrl = imgMatch ? imgMatch[1] : null;
 
@@ -21,7 +19,7 @@ const CategoryArticle = ({
         .replace(/<a[^>]*>\s*<img[^>]*>\s*<\/a>/gi, "")
         .replace(/<img[^>]*>/gi, "")
     : "";
-  
+
   return (
     <a
       href={`/${category}/${link.split("/").pop()}`}
@@ -40,7 +38,7 @@ const CategoryArticle = ({
         </div>
       )}
 
-      <div className="p-5 flex flex-col flex-grow">
+      <div className="p-5 flex flex-col grow">
         <h2 className="text-xl font-bold mb-3 text-gray-900 line-clamp-2 hover:text-blue-600">
           {title}
         </h2>
@@ -50,7 +48,7 @@ const CategoryArticle = ({
         </div>
 
         <div
-          className="text-gray-600 text-sm line-clamp-3 mb-4 flex-grow prose prose-sm"
+          className="text-gray-600 text-sm line-clamp-3 mb-4 grow prose prose-sm"
           dangerouslySetInnerHTML={{
             __html: cleanDescription,
           }}
