@@ -138,7 +138,7 @@ export default function ArticlePage() {
 
               <AuthorProfileCard {...authorInfo} />
 
-                            <NewsletterSubscription/>
+              <NewsletterSubscription />
 
               <ArticleDisclaimer />
 
@@ -152,16 +152,9 @@ export default function ArticlePage() {
             <div className="sticky top-24 space-y-6 max-h-[calc(100vh-120px)] overflow-y-auto">
               <TableOfContents content={articleContent} />
 
-                            <RelatedNewsSidebar category={rssArticle.category || "Tin tức"}/>
+              <RelatedNewsSidebar category={rssArticle.category || "Tin tức"} />
 
-                            <ReadingHistory/>
-                        </div>
-                    </aside>
-                </div>
-
-                <RelatedNewsGrid category={rssArticle.category || "Tin tức"}/>
-
-                <CategorySuggestions/>
+              <ReadingHistory />
             </div>
           </aside>
         </div>
