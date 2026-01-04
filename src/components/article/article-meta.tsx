@@ -2,6 +2,7 @@ import {
   Bookmark,
   Calendar,
   Check,
+  Clock,
   Eye,
   Facebook,
   LinkIcon,
@@ -13,7 +14,8 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button.tsx";
 import { FontSizeAdjuster } from "@/components/widgets/font-size-adjuster.tsx";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
+import { calculateReadingTime, formatReadingTime } from "@/lib/time";
 
 interface ArticleMetaProps {
   author: string;
@@ -33,6 +35,11 @@ export function ArticleMeta({
   const [isSaved, setIsSaved] = useState(false);
   const [isReading, setIsReading] = useState(false);
   const [localShareCount, setLocalShareCount] = useState(shareCount);
+
+  const readingTime = useMemo(() => {
+    if (!articleContent) return 0;
+    return calculateReadingTime(articleContent);
+  }, [articleContent]);
 
   useEffect(() => {
     // Load bookmark status from localStorage
@@ -135,6 +142,12 @@ export function ArticleMeta({
           <Calendar className="h-4 w-4" />
           <span>{publishedAt}</span>
         </div>
+        {readingTime > 0 && (
+          <div className="flex items-center gap-2">
+            <Clock className="h-4 w-4" />
+            <span>{formatReadingTime(readingTime)}</span>
+          </div>
+        )}
         <div className="flex items-center gap-2">
           <Eye className="h-4 w-4" />
           <span>{viewCount.toLocaleString()} lượt xem</span>
