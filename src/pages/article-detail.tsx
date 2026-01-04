@@ -8,6 +8,7 @@ import { ArticleTags } from "@/components/article/article-tags.tsx";
 import { ArticleComments } from "@/components/article/article-comments.tsx";
 import { AuthorProfileCard } from "@/components/article/author-profile-card.tsx";
 import { ShareArticle } from "@/components/article/share-article.tsx";
+import { PrintHeader } from "@/components/article/print-header.tsx";
 
 import { RelatedNewsSidebar } from "@/components/sections/related-news-sidebar.tsx";
 import { RelatedNewsGrid } from "@/components/sections/related-news-grid.tsx";
@@ -97,18 +98,21 @@ export default function ArticlePage() {
     cleanArticleContent(rssArticle, fullArticle);
 
   return (
-    <div className="min-h-screen bg-muted/10 pb-12">
-      <div className="bg-background border-b mb-8">
-        <div className="container mx-auto px-4 py-4">
-          <Breadcrumbs items={breadcrumbs} />
-        </div>
-      </div>
+    <div className="bg-background">
+      <div className="container mx-auto px-4 py-6">
+        <div className="grid gap-8 lg:grid-cols-12 xl:grid-cols-10">
+          <div className="lg:col-span-9 xl:col-span-7">
+            <Breadcrumbs items={breadcrumbs} />
 
-      <div className="container mx-auto px-4">
-        <div className="grid gap-8 lg:grid-cols-12 xl:grid-cols-12">
-          <main className="lg:col-span-8 xl:col-span-9 space-y-8">
-            <article className="rounded-xl border border-border/50 bg-card p-6 shadow-sm hover:shadow-md transition-shadow duration-300 md:p-8 lg:p-10">
-              <h1 className="mb-6 text-pretty text-3xl font-bold tracking-tight text-foreground lg:text-4xl lg:leading-[1.2]">
+            <PrintHeader
+              title={articleTitle}
+              author={authorInfo.name}
+              publishedAt={new Date(rssArticle.pubDate).toLocaleString("vi-VN")}
+              url={window.location.href}
+            />
+
+            <article className="mt-4">
+              <h1 className="text-pretty text-3xl font-extrabold leading-tight text-foreground lg:text-4xl">
                 {articleTitle}
               </h1>
 
