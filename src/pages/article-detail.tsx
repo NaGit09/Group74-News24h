@@ -22,6 +22,7 @@ import {
 
 import { useRSSFeeds } from "@/hooks/use-rss";
 import { useArticle } from "@/hooks/use-article";
+import { useViewCounter } from "@/hooks/use-view-counter";
 import { useEffect, useState } from "react";
 import type { Article } from "@/types/news";
 import { authorInfo } from "@/constant/author";
@@ -63,6 +64,8 @@ export default function ArticlePage() {
     title: rssArticle?.title || "",
     category: rssArticle?.category || "",
   });
+
+  const localViewCount = useViewCounter(slug || "");
 
   const loading = rssLoading || articleLoading || minimumLoading;
 
@@ -113,6 +116,7 @@ export default function ArticlePage() {
                   }
                 )}
                 articleContent={plainTextContent}
+                viewCount={localViewCount}
               />
 
               <div className="my-6 border-l-4 border-primary bg-muted/30 py-4 pl-6 pr-4">
