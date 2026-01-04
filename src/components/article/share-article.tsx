@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Share2, Check, Copy } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { toast } from "@/lib/toast";
 
 interface ShareArticleProps {
   title: string;
@@ -14,9 +15,11 @@ export function ShareArticle({ title, url }: ShareArticleProps) {
     try {
       await navigator.clipboard.writeText(url);
       setCopied(true);
+      toast.success("Đã sao chép link!", "Link bài viết đã được sao chép vào clipboard");
       setTimeout(() => setCopied(false), 2000);
     } catch (err) {
       console.error("Failed to copy:", err);
+      toast.error("Không thể sao chép", "Vui lòng thử lại");
     }
   };
 
@@ -27,8 +30,12 @@ export function ShareArticle({ title, url }: ShareArticleProps) {
           title: title,
           url: url,
         });
+        toast.success("Đã chia sẻ thành công!");
       } catch (err) {
-        console.error("Error sharing:", err);
+        if ((err as Error).name !== "AbortError") {
+          console.error("Error sharing:", err);
+          handleCopyLink();
+        }
       }
     } else {
       handleCopyLink();
