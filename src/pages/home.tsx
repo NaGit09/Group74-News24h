@@ -9,9 +9,9 @@ import { BreakingNewsBanner } from "@/components/sections/breaking-news-banner.t
 import { CategoryBlock } from "@/components/sections/category-block.tsx";
 import { SidebarTrending } from "@/components/sections/sidebar-trending.tsx";
 
-import { useRSSFeeds } from "@/hooks/use-rss";
-import LoadingSpinner from "@/components/common/LoadingSpinner";
+import Loading from "@/components/common/Loading";
 import Reload from "@/components/common/Reload";
+import { useRSSFeeds } from "@/hooks/use-rss";
 
 import { dataSample } from "@/lib/news";
 
