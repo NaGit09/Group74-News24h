@@ -44,7 +44,15 @@ export default function ArticlePage() {
 
   useEffect(() => {
     if (articles.length > 0 && slug) {
-      const foundArticle = articles.find((a) => a.guid === slug);
+      // Clean slug from url extension if present
+      const cleanSlug = slug.replace(/\.(html|chn)$/, "");
+
+      const foundArticle = articles.find((a) => {
+        // Ensure comparison is consistent
+        const cleanGuid = a.guid.replace(/\.(html|chn)$/, "");
+        return cleanGuid === cleanSlug;
+      });
+
       if (foundArticle) {
         setRssArticle(foundArticle);
       }

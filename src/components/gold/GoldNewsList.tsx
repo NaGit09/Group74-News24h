@@ -14,7 +14,7 @@ export function GoldNewsList() {
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {/* Featured News (First Card) */}
         <div className="md:col-span-2">
-          <a href={firstNews.link} className="group block h-full">
+          <a href={`/bai-viet${firstNews.link}`} className="group block h-full">
             <Card className="h-full overflow-hidden hover:shadow-lg transition-shadow border-0 shadow-sm bg-background">
               <CardContent className="p-0 h-full flex flex-col md:flex-row gap-4">
                 <div className="w-full md:w-2/3 h-64 md:h-auto relative overflow-hidden">
@@ -58,7 +58,7 @@ export function GoldNewsList() {
                       {news.title}
                     </h4>
                     <span className="text-xs text-muted-foreground">
-                      {news.source}
+                      {news.content}
                     </span>
                   </div>
                 </CardContent>

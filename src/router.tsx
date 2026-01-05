@@ -7,6 +7,8 @@ import CategoryPage from "@/pages/category";
 import NotFound from "@/pages/not-found";
 import StockPage from "@/pages/stock";
 import { RootLayout } from "@/components/layout/root-layout.tsx";
+import WeatherPage from "@/pages/weather";
+import CalendarPage from "@/pages/calendar";
 
 export const router = createBrowserRouter([
   {
@@ -20,6 +22,9 @@ export const router = createBrowserRouter([
       { path: "chung-khoan", element: <StockPage /> },
       { path: "tu-khoa/:tag", element: <TagPage /> },
       { path: "danh-muc/:category", element: <CategoryPage /> },
+      { path: "thoi-tiet", element: <WeatherPage /> },
+      { path: "calendar", element: <CalendarPage /> },
+      { path: "lich-van-nien", element: <CalendarPage /> },
       { path: "*", element: <NotFound /> },
     ],
   },
