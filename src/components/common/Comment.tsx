@@ -2,13 +2,19 @@ import type { Comment } from "@/constant/comment";
 import { selectAuthor } from "@/stores/comment.store";
 import { Reply, ThumbsUp } from "lucide-react";
 import { useDispatch } from "react-redux";
+import { memo, useCallback } from "react";
 
-const CommentDisplay = (props: Comment) => {
+const CommentDisplay = memo((props: Comment) => {
   const { id, author, content, publishedAt, likes, replies, avatar } = props;
   const dispatch = useDispatch();
-  const handleSelectReply = (author: string, id: string) => {
-    dispatch(selectAuthor({ author, id }));
-  };
+
+  const handleSelectReply = useCallback(
+    (author: string, id: string) => {
+      dispatch(selectAuthor({ author, id }));
+    },
+    [dispatch]
+  );
+
   return (
     <div key={id} className="space-y-3">
       <div className="flex gap-3">
@@ -84,6 +90,8 @@ const CommentDisplay = (props: Comment) => {
       )}
     </div>
   );
-};
+});
+
+CommentDisplay.displayName = "CommentDisplay";
 
 export default CommentDisplay;
