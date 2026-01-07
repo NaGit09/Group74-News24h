@@ -14,8 +14,12 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button.tsx";
 import { FontSizeAdjuster } from "@/components/widgets/font-size-adjuster.tsx";
+<<<<<<< HEAD
 import { useEffect, useState, useMemo } from "react";
 import { calculateReadingTime, formatReadingTime } from "@/lib/time";
+=======
+import { useEffect, useState, useRef, useCallback, memo } from "react";
+>>>>>>> 547967b (perf: #5 Memoize article components, enhance text-to-speech with voice selection and control, and update jspdf dependency.)
 
 interface ArticleMetaProps {
   author: string;
@@ -25,21 +29,45 @@ interface ArticleMetaProps {
   shareCount?: number;
 }
 
-export function ArticleMeta({
-  author,
-  publishedAt,
-  articleContent,
-  viewCount = 4532,
-  shareCount = 342,
-}: ArticleMetaProps) {
-  const [isSaved, setIsSaved] = useState(false);
-  const [isReading, setIsReading] = useState(false);
-  const [localShareCount, setLocalShareCount] = useState(shareCount);
+// Simple beep to verifying audio context works
+const playTestSound = () => {
+  try {
+    const audio = new Audio(
+      "https://actions.google.com/sounds/v1/alarms/beep_short.ogg"
+    );
+    audio.play().catch((e) => console.error("Test sound failed", e));
+  } catch (err) {
+    console.error("Audio object error", err);
+  }
+};
 
+<<<<<<< HEAD
   const readingTime = useMemo(() => {
     if (!articleContent) return 0;
     return calculateReadingTime(articleContent);
   }, [articleContent]);
+
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const bookmarks = localStorage.getItem("bookmarks");
+      if (bookmarks) {
+        const bookmarkList = JSON.parse(bookmarks);
+        const currentUrl = window.location.pathname;
+        setIsSaved(bookmarkList.some((b: any) => b.url === currentUrl));
+=======
+const ArticleMeta = memo(
+  ({
+    author,
+    publishedAt,
+    articleContent,
+    viewCount = 4532,
+    shareCount = 342,
+  }: ArticleMetaProps) => {
+    const [isSaved, setIsSaved] = useState(false);
+    const [isReading, setIsReading] = useState(false);
+    const [localShareCount, setLocalShareCount] = useState(shareCount);
+    const [voices, setVoices] = useState<SpeechSynthesisVoice[]>([]);
+    const utteranceRef = useRef<SpeechSynthesisUtterance | null>(null);
 
     useEffect(() => {
       if (typeof window !== "undefined") {
@@ -64,6 +92,7 @@ export function ArticleMeta({
         return () => {
           window.speechSynthesis.onvoiceschanged = null;
         };
+>>>>>>> 547967b (perf: #5 Memoize article components, enhance text-to-speech with voice selection and control, and update jspdf dependency.)
       }
     }, []);
 
@@ -84,7 +113,58 @@ export function ArticleMeta({
         setIsReading(false);
         return;
       }
+    const handleTextToSpeech = useCallback(() => {
+      console.log("TTS Clicked");
 
+      // 1. Play feedback sound immediately
+      playTestSound();
+
+      if (!articleContent) {
+        alert("Không có nội dung bài viết.");
+        return;
+      }
+
+      // Toggle off
+      if (isReading) {
+        window.speechSynthesis.cancel();
+        setIsReading(false);
+        return;
+      }
+
+      // Reset
+      window.speechSynthesis.cancel();
+
+      // Clean text
+      const plainText = articleContent
+        .replace(/<[^>]*>/g, " ")
+        .replace(/\s+/g, " ")
+        .trim();
+      if (!plainText) return;
+
+      // Create Utterance
+      const utterance = new SpeechSynthesisUtterance(plainText);
+      utteranceRef.current = utterance; // Prevent GC
+
+      utterance.lang = "vi-VN";
+      utterance.rate = 1.0;
+      utterance.volume = 1.0;
+
+      // Voice Selection
+      let available =
+        voices.length > 0 ? voices : window.speechSynthesis.getVoices();
+      const viVoice = available.find((v) => v.lang.includes("vi"));
+      if (viVoice) {
+        utterance.voice = viVoice;
+        console.log("Using Voice:", viVoice.name);
+      } else {
+        console.log("No Vietnamese voice found. Using system default.");
+      }
+
+      // Events
+      utterance.onstart = () => {
+        console.log("TTS Started");
+        setIsReading(true);
+      };
       // Reset
       window.speechSynthesis.cancel();
 
@@ -155,9 +235,66 @@ export function ArticleMeta({
 
     const handleShare = useCallback((platform: string) => {
       const url = window.location.href;
+      utterance.onend = () => {
+        console.log("TTS Ended");
+        setIsReading(false);
+        utteranceRef.current = null;
+      };
+
+      utterance.onerror = (e) => {
+        console.error("TTS Error:", e);
+        if (e.error !== "canceled" && e.error !== "interrupted") {
+          setIsReading(false);
+        }
+      };
+
+      // Chrome Resume Fix Loop
+      // Chrome stops speaking after ~15 seconds if not paused/resumed
+      const resumeInfinity = () => {
+        if (!utteranceRef.current) return; // Stopped
+
+        window.speechSynthesis.pause();
+        window.speechSynthesis.resume();
+
+        if (window.speechSynthesis.speaking) {
+          setTimeout(resumeInfinity, 10000); // Repeat every 10s
+        }
+      };
+
+      window.speechSynthesis.speak(utterance);
+
+      // Kickstart the resume loop
+      setTimeout(resumeInfinity, 5000);
+      setIsReading(true);
+    }, [articleContent, isReading, voices]);
+
+    const handleShare = useCallback((platform: string) => {
+      const url = window.location.href;
 
       setLocalShareCount((prev) => prev + 1);
+      setLocalShareCount((prev) => prev + 1);
 
+      switch (platform) {
+        case "facebook":
+          window.open(
+            `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(
+              url
+            )}`,
+            "_blank"
+          );
+          break;
+        case "zalo":
+          window.open(
+            `https://page.zalo.me/share?url=${encodeURIComponent(url)}`,
+            "_blank"
+          );
+          break;
+        case "copy":
+          navigator.clipboard.writeText(url);
+          alert("Đã sao chép link!");
+          break;
+      }
+    }, []);
       switch (platform) {
         case "facebook":
           window.open(
@@ -183,10 +320,19 @@ export function ArticleMeta({
     const handlePrint = useCallback(() => {
       window.print();
     }, []);
+    const handlePrint = useCallback(() => {
+      window.print();
+    }, []);
 
     const handleSaveArticle = useCallback(() => {
       if (typeof window === "undefined") return;
+    const handleSaveArticle = useCallback(() => {
+      if (typeof window === "undefined") return;
 
+      const bookmarks = localStorage.getItem("bookmarks");
+      const bookmarkList = bookmarks ? JSON.parse(bookmarks) : [];
+      const currentUrl = window.location.pathname;
+      const title = document.title;
       const bookmarks = localStorage.getItem("bookmarks");
       const bookmarkList = bookmarks ? JSON.parse(bookmarks) : [];
       const currentUrl = window.location.pathname;
@@ -212,14 +358,48 @@ export function ArticleMeta({
         setIsSaved(true);
       }
     }, [isSaved]);
+      if (isSaved) {
+        // Remove bookmark
+        const filtered = bookmarkList.filter((b: any) => b.url !== currentUrl);
+        localStorage.setItem("bookmarks", JSON.stringify(filtered));
+        setIsSaved(false);
+      } else {
+        // Add bookmark
+        const newBookmark = {
+          url: currentUrl,
+          title,
+          savedAt: new Date().toISOString(),
+        };
+        bookmarkList.unshift(newBookmark);
+        localStorage.setItem(
+          "bookmarks",
+          JSON.stringify(bookmarkList.slice(0, 50))
+        );
+        setIsSaved(true);
+      }
+    }, [isSaved]);
 
-  return (
-    <div className="mt-4 border-y border-border py-4">
-      <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
-        <div className="flex items-center gap-2">
-          <User className="h-4 w-4" />
-          <span className="font-medium text-foreground">{author}</span>
+    return (
+      <div className="mt-4 border-y border-border py-4">
+        <div className="flex flex-wrap items-center gap-4 text-sm text-muted-foreground">
+          <div className="flex items-center gap-2">
+            <User className="h-4 w-4" />
+            <span className="font-medium text-foreground">{author}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Calendar className="h-4 w-4" />
+            <span>{publishedAt}</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Eye className="h-4 w-4" />
+            <span>{viewCount.toLocaleString()} lượt xem</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <Share2 className="h-4 w-4" />
+            <span>{localShareCount} lượt chia sẻ</span>
+          </div>
         </div>
+<<<<<<< HEAD
         <div className="flex items-center gap-2">
           <Calendar className="h-4 w-4" />
           <span>{publishedAt}</span>
@@ -237,9 +417,22 @@ export function ArticleMeta({
         <div className="flex items-center gap-2">
           <Share2 className="h-4 w-4" />
           <span>{localShareCount} lượt chia sẻ</span>
-        </div>
-      </div>
+=======
 
+        <div className="mt-3 flex flex-wrap items-center gap-3">
+          <Button
+            variant={isSaved ? "default" : "outline"}
+            size="sm"
+            onClick={handleSaveArticle}
+            className="gap-2"
+          >
+            {isSaved ? (
+              <Check className="h-4 w-4" />
+            ) : (
+              <Bookmark className="h-4 w-4" />
+            )}
+            {isSaved ? "Đã lưu" : "Lưu bài viết"}
+          </Button>
         <div className="mt-3 flex flex-wrap items-center gap-3">
           <Button
             variant={isSaved ? "default" : "outline"}
@@ -259,7 +452,20 @@ export function ArticleMeta({
             <MessageCircle className="h-4 w-4" />
             Góp ý
           </Button>
+          <Button variant="outline" size="sm" className="gap-2 bg-transparent">
+            <MessageCircle className="h-4 w-4" />
+            Góp ý
+          </Button>
 
+          <Button
+            variant={isReading ? "default" : "outline"}
+            size="sm"
+            onClick={handleTextToSpeech}
+            className="gap-2"
+          >
+            <Volume2 className="h-4 w-4" />
+            {isReading ? "Đang đọc..." : "Nghe bài viết"}
+          </Button>
           <Button
             variant={isReading ? "default" : "outline"}
             size="sm"
@@ -279,9 +485,20 @@ export function ArticleMeta({
             <Printer className="h-4 w-4" />
             In bài
           </Button>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handlePrint}
+            className="gap-2 bg-transparent"
+          >
+            <Printer className="h-4 w-4" />
+            In bài
+          </Button>
 
           <FontSizeAdjuster />
+          <FontSizeAdjuster />
 
+          <div className="h-6 w-px bg-border" />
           <div className="h-6 w-px bg-border" />
 
           <span className="text-sm text-muted-foreground">Chia sẻ:</span>
@@ -314,6 +531,7 @@ export function ArticleMeta({
             <LinkIcon className="h-4 w-4" />
             Copy
           </Button>
+>>>>>>> 547967b (perf: #5 Memoize article components, enhance text-to-speech with voice selection and control, and update jspdf dependency.)
         </div>
       </div>
     );
