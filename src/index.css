@@ -102,6 +102,7 @@
 }
 
 @media print {
+  /* Hide non-essential elements */
   header,
   footer,
   aside,
@@ -111,6 +112,7 @@
     display: none !important;
   }
 
+  /* Optimize article content for printing */
   .article-content {
     font-size: 12pt !important;
     line-height: 1.6 !important;
@@ -141,6 +143,38 @@
     font-size: 10pt;
     color: #666;
   }
+
+  /* Print-specific styles */
+  body {
+    background: white !important;
+    color: black !important;
+  }
+
+  a[href]::after {
+    content: " (" attr(href) ")";
+    font-size: 9pt;
+    color: #666;
+  }
+
+  /* Optimize page breaks */
+  h1, h2, h3, h4, h5, h6 {
+    page-break-after: avoid;
+    page-break-inside: avoid;
+  }
+
+  img, figure, table {
+    page-break-inside: avoid;
+  }
+
+  /* Add page margins */
+  @page {
+    margin: 2cm;
+  }
+
+  /* Show article metadata */
+  .print-only {
+    display: block !important;
+  }
 }
 
 @layer utilities {
@@ -150,5 +184,14 @@
   .no-scrollbar {
     -ms-overflow-style: none;
     scrollbar-width: none;
+  }
+
+  @keyframes shimmer {
+    0% {
+      transform: translateX(-100%);
+    }
+    100% {
+      transform: translateX(100%);
+    }
   }
 }

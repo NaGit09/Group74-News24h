@@ -1,5 +1,6 @@
 import { Link } from "react-router";
-import { useState } from "react";
+import { ImageWithFallback } from "@/components/common/image-with-fallback";
+import { formatRelativeTime } from "@/lib/time";
 
 interface NewsCardFeaturedProps {
   title: string;
@@ -17,18 +18,14 @@ export function NewsCardFeatured({
   href,
   publishedAt,
 }: NewsCardFeaturedProps) {
-  const [imgError, setImgError] = useState(false);
-
   return (
     <Link to={href} className="group block">
       <article className="transition-all">
         <div className="relative aspect-video overflow-hidden mb-2 bg-muted">
-          <img
-            src={imgError ? "/placeholder.svg" : image}
+          <ImageWithFallback
+            src={image}
             alt={title}
-            loading="lazy"
             className="object-cover transition-transform duration-300 group-hover:scale-105 w-full h-full"
-            onError={() => setImgError(true)}
           />
         </div>
         <div>
@@ -38,7 +35,9 @@ export function NewsCardFeatured({
           <p className="mb-1 text-sm leading-relaxed text-muted-foreground line-clamp-2">
             {sapo}
           </p>
-          <time className="text-xs text-muted-foreground">{publishedAt}</time>
+          <time className="text-xs text-muted-foreground">
+            {formatRelativeTime(publishedAt)}
+          </time>
         </div>
       </article>
     </Link>
