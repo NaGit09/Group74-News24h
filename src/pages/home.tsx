@@ -8,10 +8,6 @@ import { SportWidget } from "@/components/widgets/sport-widget.tsx";
 import { BreakingNewsBanner } from "@/components/sections/breaking-news-banner.tsx";
 import { CategoryBlock } from "@/components/sections/category-block.tsx";
 import { SidebarTrending } from "@/components/sections/sidebar-trending.tsx";
-<<<<<<< HEAD
-
-=======
->>>>>>> 583c410 (feat: football block render data by articles (no filter by category))
 
 import { useRSSFeeds } from "@/hooks/use-rss";
 import LoadingSpinner from "@/components/common/LoadingSpinner";

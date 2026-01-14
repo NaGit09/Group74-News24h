@@ -19,7 +19,7 @@ import { handleDownload, handlePrint } from "@/lib/helper";
 import { useGold } from "@/hooks/use-gold";
 import NotData from "../common/NotData";
 
-export function GoldPriceChart() {
+export default function GoldPriceChart() {
   const { chartData: data, brand } = useGold({ skipInit: true });
   const [visibleLines, setVisibleLines] = useState<string[]>(["buy", "sell"]);
   const chartRef = useRef<HTMLDivElement>(null);

@@ -1,7 +1,7 @@
 import { RelationGoldPriceWithNews } from "@/constant/gold";
 import { Card, CardContent } from "@/components/ui/card";
 
-export function GoldNewsList() {
+export default function GoldNewsList() {
   if (!RelationGoldPriceWithNews || RelationGoldPriceWithNews.length === 0) {
     return null;
   }

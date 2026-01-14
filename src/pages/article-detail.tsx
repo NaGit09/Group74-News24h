@@ -20,23 +20,13 @@ import {
     useTrackReading,
 } from "@/components/widgets/reading-history.tsx";
 
-<<<<<<< HEAD
-import { useRSSFeeds } from "@/hooks/use-rss";
-import { useArticle } from "@/hooks/use-article";
-import { useViewCounter } from "@/hooks/use-view-counter";
-import { useEffect, useState } from "react";
-import type { Article } from "@/types/news";
-import { authorInfo } from "@/constant/author";
-import LoadingSpinner from "@/components/common/LoadingSpinner";
-=======
 import {useRSSFeeds} from "@/hooks/use-rss";
 import {useArticle} from "@/hooks/use-article";
 import {useViewCounter} from "@/hooks/use-view-counter";
 import {useEffect, useState} from "react";
 import type {Article} from "@/types/news";
 import {authorInfo} from "@/constant/author";
-import Loading from "@/components/common/Loading";
->>>>>>> a85375b (remove junk feature)
+import LoadingSpinner from "@/components/common/LoadingSpinner";
 import NotFound from "./not-found";
 import {cleanArticleContent} from "@/lib/clean";
 
@@ -54,20 +44,6 @@ export default function ArticlePage() {
         return () => clearTimeout(timer);
     }, []);
 
-<<<<<<< HEAD
-  useEffect(() => {
-    if (articles.length > 0 && slug) {
-      const cleanSlug = slug.replace(/\.(html|chn)$/, "");
-
-      const foundArticle = articles.find((a) => {
-        const cleanGuid = a.guid.replace(/\.(html|chn)$/, "");
-        return cleanGuid === cleanSlug;
-      });
-
-      if (foundArticle) {
-        setRssArticle(foundArticle);
-      }
-=======
     useEffect(() => {
         if (articles.length > 0 && slug) {
             const foundArticle = articles.find((a) => a.guid === slug);
@@ -94,8 +70,7 @@ export default function ArticlePage() {
     const loading = rssLoading || articleLoading || minimumLoading;
 
     if (loading) {
-        return <Loading/>;
->>>>>>> a85375b (remove junk feature)
+        return <LoadingSpinner/>;
     }
 
     if (articleError || !rssArticle || !fullArticle) {
@@ -122,18 +97,12 @@ export default function ArticlePage() {
                     <div className="lg:col-span-9 xl:col-span-7">
                         <Breadcrumbs items={breadcrumbs}/>
 
-<<<<<<< HEAD
-  if (loading) {
-    return <LoadingSpinner />;
-  }
-=======
                         <PrintHeader
                             title={articleTitle}
                             author={authorInfo.name}
                             publishedAt={new Date(rssArticle.pubDate).toLocaleString("vi-VN")}
                             url={window.location.href}
                         />
->>>>>>> a85375b (remove junk feature)
 
                         <article className="mt-4">
                             <h1 className="text-pretty text-3xl font-extrabold leading-tight text-foreground lg:text-4xl">
@@ -184,15 +153,7 @@ export default function ArticlePage() {
 
                             <ArticleDisclaimer/>
 
-<<<<<<< HEAD
-              <div className="my-8 rounded-lg border-l-4 border-primary bg-primary/5 p-6 shadow-inner">
-                <p className="font-sans text-lg font-medium leading-relaxed text-foreground/90 lg:text-xl">
-                  {articleSapo}
-                </p>
-              </div>
-=======
                             <ArticleTags tags={[rssArticle.category || "Tin tức"]}/>
->>>>>>> a85375b (remove junk feature)
 
                             <ArticleComments/>
                         </article>
@@ -202,56 +163,6 @@ export default function ArticlePage() {
                         <div className="sticky top-24 space-y-6 max-h-[calc(100vh-120px)] overflow-y-auto">
                             <TableOfContents content={articleContent}/>
 
-<<<<<<< HEAD
-              <div className="mt-8 flex items-center justify-between rounded-lg border border-border/50 bg-muted/20 p-4">
-                <p className="text-sm font-medium text-muted-foreground">
-                  Nguồn:{" "}
-                  <a
-                    href={rssArticle.link}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-primary transition-colors hover:text-primary/80 hover:underline"
-                  >
-                    24h.com.vn
-                  </a>
-                </p>
-              </div>
-
-              <div className="mt-10 border-t pt-8">
-                <AuthorProfileCard {...authorInfo} />
-              </div>
-
-              <div className="mt-8">
-                <NewsletterSubscription />
-              </div>
-
-              <ArticleDisclaimer />
-
-              <div className="mt-8">
-                <ArticleTags tags={[rssArticle.category || "Tin tức"]} />
-              </div>
-
-              <div className="mt-10">
-                <ArticleComments />
-              </div>
-            </article>
-
-            <RelatedNewsGrid category={rssArticle.category || "Tin tức"} />
-          </main>
-
-          <aside className="lg:col-span-4 xl:col-span-3">
-            <div className="sticky top-24 space-y-6">
-              <div className="rounded-xl border border-border/50 bg-card shadow-sm">
-                <div className="p-4 font-semibold border-b">Mục lục</div>
-                <div className="max-h-[60vh] overflow-y-auto p-2">
-                  <TableOfContents content={articleContent} />
-                </div>
-              </div>
-
-              <RelatedNewsSidebar category={rssArticle.category || "Tin tức"} />
-
-              <ReadingHistory />
-=======
                             <RelatedNewsSidebar category={rssArticle.category || "Tin tức"}/>
 
                             <ReadingHistory/>
@@ -262,18 +173,7 @@ export default function ArticlePage() {
                 <RelatedNewsGrid category={rssArticle.category || "Tin tức"}/>
 
                 <CategorySuggestions/>
->>>>>>> a85375b (remove junk feature)
             </div>
         </div>
-<<<<<<< HEAD
-
-        <div className="mt-12">
-          <CategorySuggestions />
-        </div>
-      </div>
-    </div>
-  );
-=======
     );
->>>>>>> a85375b (remove junk feature)
 }

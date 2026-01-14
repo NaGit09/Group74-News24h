@@ -1,14 +1,16 @@
 import { createBrowserRouter } from "react-router";
-import HomePage from "@/pages/home";
-import ArticlePage from "@/pages/article-detail";
-import GoldPricePage from "@/pages/gold-price";
-import TagPage from "@/pages/tag";
-import CategoryPage from "@/pages/category";
-import NotFound from "@/pages/not-found";
-import StockPage from "@/pages/stock";
-import { RootLayout } from "@/components/layout/root-layout.tsx";
-import WeatherPage from "@/pages/weather";
-import CalendarPage from "@/pages/calendar";
+import { lazy } from "react";
+import { RootLayout } from "./components/layout/root-layout";
+
+const HomePage = lazy(() => import("@/pages/home"));
+const ArticlePage = lazy(() => import("@/pages/article-detail"));
+const GoldPricePage = lazy(() => import("@/pages/gold-price"));
+const TagPage = lazy(() => import("@/pages/tag"));
+const CategoryPage = lazy(() => import("@/pages/category"));
+const NotFound = lazy(() => import("@/pages/not-found"));
+const StockPage = lazy(() => import("@/pages/stock"));
+const WeatherPage = lazy(() => import("@/pages/weather"));
+const CalendarPage = lazy(() => import("@/pages/calendar"));
 
 export const router = createBrowserRouter([
   {

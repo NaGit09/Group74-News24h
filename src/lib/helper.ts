@@ -1,8 +1,5 @@
 import type { GoldPrice } from "@/types/gold-price";
 import type { RefObject } from "react";
-import html2canvas from "html2canvas-pro";
-import jsPDF from "jspdf";
-
 export function getTodayAndYesterday(data: GoldPrice[]) {
   if (data.length < 2) return null;
 
@@ -43,10 +40,12 @@ export const handleDownload = async (
     return;
   }
 
+  const html2canvas = (await import("html2canvas-pro")).default;
   const canvas = await html2canvas(chartRef.current, { useCORS: true });
   const image = canvas.toDataURL(`image/${type}`, 1.0);
 
   if (type === "pdf") {
+    const { jsPDF } = await import("jspdf");
     const pdf = new jsPDF({
       orientation: "landscape",
       unit: "px",
@@ -78,6 +77,7 @@ export const handlePrint = async (
   printWindow.document.write("<div>Đang xử lý biểu đồ...</div>");
 
   try {
+    const html2canvas = (await import("html2canvas-pro")).default;
     const canvas = await html2canvas(chartRef.current, { useCORS: true });
     const image = canvas.toDataURL("image/png");
 
