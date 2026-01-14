@@ -1,12 +1,12 @@
 import type React from "react";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useCallback, memo } from "react";
 import { X } from "lucide-react";
 
 interface ArticleContentProps {
   content: string;
 }
 
-export function ArticleContent({ content }: ArticleContentProps) {
+export const ArticleContent = memo(({ content }: ArticleContentProps) => {
   const [lightboxImage, setLightboxImage] = useState<string | null>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -41,13 +41,13 @@ export function ArticleContent({ content }: ArticleContentProps) {
     });
   }, [content]);
 
-  const handleImageClick = (e: React.MouseEvent) => {
+  const handleImageClick = useCallback((e: React.MouseEvent) => {
     const target = e.target as HTMLElement;
     if (target.tagName === "IMG") {
       const img = target as HTMLImageElement;
       setLightboxImage(img.src);
     }
-  };
+  }, []);
 
   return (
     <>
@@ -92,4 +92,6 @@ export function ArticleContent({ content }: ArticleContentProps) {
       )}
     </>
   );
-}
+});
+
+ArticleContent.displayName = "ArticleContent";

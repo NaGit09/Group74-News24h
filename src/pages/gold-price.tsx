@@ -1,23 +1,36 @@
-import { GoldPriceChart } from "@/components/gold/GoldChart";
-import { GoldTodayYesterdayTable } from "@/components/gold/GoldData";
 import { useGold } from "@/hooks/use-gold";
-import { GoldNewsList } from "@/components/gold/GoldNewsList";
+import { lazy } from "react";
+import Splitting from "@/components/common/Splitting";
+
+const GoldPriceChart = lazy(() => import("@/components/gold/GoldChart"));
+const GoldTodayYesterdayTable = lazy(() => import("@/components/gold/GoldData"));
+const GoldNewsList = lazy(() => import("@/components/gold/GoldNewsList"));
+
 export default function GoldPricePage() {
   const { currentDate } = useGold();
 
   return (
     <div className="container mx-auto px-4 py-6">
+      {/* Header */}
       <h1 className="text-2xl font-bold mb-4">Giá vàng</h1>
       <h6 className="text-sm mb-4">
         Nguồn: giavang.net và pnj.com.vn - Cập nhật lúc 23:58 (
         {currentDate.split("-").reverse().join("/")})
       </h6>
+      {/* Chart and table data */}
       <div className="flex justify-between gap-3">
-        <GoldTodayYesterdayTable />
-        <GoldPriceChart />
+        <Splitting>
+          <GoldTodayYesterdayTable />
+        </Splitting>
+        <Splitting>
+          <GoldPriceChart />
+        </Splitting>
       </div>
+      {/* Related news */}
       <div className="relation">
-        <GoldNewsList />
+        <Splitting>
+          <GoldNewsList />
+        </Splitting>
       </div>
     </div>
   );

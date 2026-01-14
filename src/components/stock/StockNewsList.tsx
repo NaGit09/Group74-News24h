@@ -5,7 +5,7 @@ interface StockNewsListProps {
   articles: Article[];
 }
 
-export function StockNewsList({ articles }: StockNewsListProps) {
+export default function StockNewsList({ articles }: StockNewsListProps) {
   if (!articles || articles.length === 0) {
     return null;
   }
@@ -42,7 +42,7 @@ export function StockNewsList({ articles }: StockNewsListProps) {
                     (e.target as HTMLImageElement).onerror = null;
                   }}
                 />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent md:hidden" />
+                <div className="absolute inset-0 bg-linear-to-t from-black/60 to-transparent md:hidden" />
               </div>
               <div className="w-full md:w-1/2 p-6 md:p-8 flex flex-col justify-center bg-white relative">
                 <span className="inline-block px-3 py-1 mb-4 text-xs font-semibold tracking-wider text-blue-600 uppercase bg-blue-50 rounded-full w-fit">
@@ -81,7 +81,7 @@ export function StockNewsList({ articles }: StockNewsListProps) {
             >
               <Card className="overflow-hidden hover:shadow-lg transition-all duration-300 border-0 shadow-sm bg-white rounded-xl h-full">
                 <CardContent className="p-0 flex gap-4 h-full">
-                  <div className="w-24 min-w-[6rem] h-full relative overflow-hidden">
+                  <div className="w-24 min-w-24 h-full relative overflow-hidden">
                     <img
                       src={news.image}
                       alt={news.title}

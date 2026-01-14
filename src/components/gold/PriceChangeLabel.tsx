@@ -1,10 +1,11 @@
-const PriceChangeLabel = ({
-  today,
-  yesterday,
-}: {
+export interface PriceChangeLabelProps {
   today: number | undefined;
   yesterday: number | undefined;
-}) => {
+}
+export default function PriceChangeLabel({
+  today,
+  yesterday,
+}: PriceChangeLabelProps) {
   if (today === undefined || yesterday === undefined) return null;
   const diff = today - yesterday;
   if (diff === 0) return null;
@@ -20,4 +21,3 @@ const PriceChangeLabel = ({
   );
 };
 
-export default PriceChangeLabel;

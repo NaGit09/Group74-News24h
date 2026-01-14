@@ -9,6 +9,7 @@ import {
 import { Card, CardContent } from "@/components/ui/card";
 import PriceChangeLabel from "./PriceChangeLabel";
 import { useGold } from "@/hooks/use-gold";
+import { useDate } from "@/hooks/use-date";
 import { cn } from "@/lib/utils";
 import {
   Select,
@@ -18,7 +19,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Calendar } from "@/components/ui/calendar";
-import { useState } from "react";
 import {
   Popover,
   PopoverContent,
@@ -26,36 +26,22 @@ import {
 } from "@/components/ui/popover";
 import { Button } from "@/components/ui/button";
 import { CalendarIcon } from "lucide-react";
-import { format } from "date-fns";
 
-export function GoldTodayYesterdayTable() {
+export default function GoldTodayYesterdayTable() {
   const { tableData, brand, brands, currentDate, updateBrand, updateDate } =
     useGold({ skipInit: true });
 
-  const date = new Date(currentDate);
-
-  const [isPopoverOpen, setIsPopoverOpen] = useState(false);
-
-  // Helper to safely format date
-  const formatDateSafe = (d: Date | string | number) => {
-    try {
-      return format(new Date(d), "dd/MM/yyyy");
-    } catch (e) {
-      return "";
-    }
-  };
-
-  const todayDate = formatDateSafe(date);
-  const yesterdayDate = formatDateSafe(
-    new Date(date).setDate(date.getDate() - 1)
-  );
-
-  const handleSelectDate = (selectedDate: Date | undefined) => {
-    if (selectedDate) {
-      updateDate(format(selectedDate, "yyyy-MM-dd"));
-      setIsPopoverOpen(false);
-    }
-  };
+  const {
+    date,
+    isOpen: isPopoverOpen,
+    setIsOpen: setIsPopoverOpen,
+    handleSelectDate,
+    todayDate,
+    yesterdayDate,
+  } = useDate({
+    currentDate,
+    onDateChange: updateDate,
+  });
 
   return (
     <div className="flex flex-col flex-1">
@@ -84,7 +70,7 @@ export function GoldTodayYesterdayTable() {
               )}
             >
               <CalendarIcon className="mr-2 h-4 w-4" />
-              {date ? format(date, "dd/MM/yyyy") : <span>Chọn ngày</span>}
+              {todayDate || <span>Chọn ngày</span>}
             </Button>
           </PopoverTrigger>
           <PopoverContent className="w-auto p-0" align="start">
