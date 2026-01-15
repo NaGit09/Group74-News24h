@@ -26,7 +26,7 @@ import {useViewCounter} from "@/hooks/use-view-counter";
 import {useEffect, useState} from "react";
 import type {Article} from "@/types/news";
 import {authorInfo} from "@/constant/author";
-import LoadingSpinner from "@/components/common/LoadingSpinner";
+import LoadingSpinner from "@/components/common/loading-spinner.tsx";
 import NotFound from "./not-found";
 import {cleanArticleContent} from "@/lib/clean";
 
@@ -133,19 +133,6 @@ export default function ArticlePage() {
                             </div>
                             <ArticleContent content={articleContent}/>
 
-                            <div className="my-6 p-4 bg-muted/30 rounded">
-                                <p className="text-sm text-muted-foreground">
-                                    Nguồn:{" "}
-                                    <a
-                                        href={rssArticle.link}
-                                        target="_blank"
-                                        rel="noopener noreferrer"
-                                        className="text-primary hover:underline font-medium"
-                                    >
-                                        24h.com.vn
-                                    </a>
-                                </p>
-                            </div>
 
                             <AuthorProfileCard {...authorInfo} />
 
