@@ -1,7 +1,6 @@
 import { Link } from "react-router";
 import { ImageWithFallback } from "@/components/common/image-with-fallback";
 import { formatRelativeTime } from "@/lib/time";
-import { HoursAgo } from "@/lib/helper";
 
 interface NewsCardSmallProps {
   title: string;
@@ -14,12 +13,7 @@ interface NewsCardSmallProps {
 export function NewsCardSmall(props: NewsCardSmallProps) {
 
   const { title, sapo, image, href, publishedAt } = props;
-<<<<<<< HEAD
   const time = formatRelativeTime(publishedAt);
-=======
-  const [hour , time] = publishedAt.split(" ");
-  const hoursAgo = HoursAgo(hour);
->>>>>>> f8fa3b5 (enhance: replace video in home page and improve display time published news , using calendar api from calendarific)
   return (
     <Link to={href} className="group">
       <article className="flex gap-3 py-3 border-b border-border/50 last:border-0 transition-all hover:bg-accent/5">
@@ -40,6 +34,7 @@ export function NewsCardSmall(props: NewsCardSmallProps) {
             </p>
           )}
           <time className="text-xs text-muted-foreground">
+           {time}
            {time}
           </time>
         </div>

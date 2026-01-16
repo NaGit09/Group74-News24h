@@ -103,10 +103,7 @@ export default function ArticlePage() {
               title={articleTitle}
               author={authorInfo.name}
               publishedAt={new Date(rssArticle.pubDate).toLocaleString("vi-VN")}
-<<<<<<< HEAD
-=======
               url={window.location.href}
->>>>>>> f8fa3b5 (enhance: replace video in home page and improve display time published news , using calendar api from calendarific)
             />
 
             <article className="mt-4">
