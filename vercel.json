@@ -2,7 +2,7 @@
   "rewrites": [
     {
       "source": "/tts",
-      "destination": "/api/tts"
+      "destination": "https://api.murf.ai/v1/speech/generate"
     },
     {
       "source": "/api/rss/:match*",
