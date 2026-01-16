@@ -116,7 +116,6 @@ export function formatRelativeTime(dateString: string): string {
   );
 
   const diffTime = Math.abs(today.getTime() - postedDay.getTime())/(60*1000);
-  console.log(diffTime);
 
   if (diffTime < 60) {
     return `Vừa đăng ${Math.floor(diffTime)} phút trước`;
