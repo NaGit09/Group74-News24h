@@ -36,8 +36,7 @@ export function NewsStack({ items, title = "Tin mới nhất" }: NewsStackProps)
                 </p>
               )}
               <time className="mt-1 block text-xs text-muted-foreground">
-              {formatRelativeTime(item.publishedAt)}
-              {formatRelativeTime(item.publishedAt)}
+                {item.publishedAt}
               </time>
             </Link>
           </li>

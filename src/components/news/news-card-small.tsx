@@ -1,6 +1,7 @@
 import { Link } from "react-router";
 import { ImageWithFallback } from "@/components/common/image-with-fallback";
 import { formatRelativeTime } from "@/lib/time";
+import { HoursAgo } from "@/lib/helper";
 
 interface NewsCardSmallProps {
   title: string;
