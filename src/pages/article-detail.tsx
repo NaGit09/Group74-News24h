@@ -29,6 +29,7 @@ import {authorInfo} from "@/constant/author";
 import LoadingSpinner from "@/components/common/loading-spinner.tsx";
 import NotFound from "./not-found";
 import { cleanArticleContent } from "@/lib/clean";
+import { ViettelTTSButton } from "@/components/common/viettel-tts-button";
 
 export default function ArticlePage() {
   const { articles, loading: rssLoading } = useRSSFeeds();
@@ -127,6 +128,13 @@ export default function ArticlePage() {
                   articleContent={plainTextContent}
                   viewCount={localViewCount}
                 />
+                
+                <div className="mt-4 flex items-center gap-4">
+                  <ViettelTTSButton 
+                    text={`${articleTitle}. ${articleSapo}. ${plainTextContent}`}
+                    options={{ voice: "hn-quynhanh", speed: 1.0 }}
+                  />
+                </div>
               </div>
 
               <div className="my-6 border-l-4 border-primary bg-muted/30 py-4 pl-6 pr-4">
