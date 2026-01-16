@@ -20,12 +20,12 @@ import {
   useTrackReading,
 } from "@/components/widgets/reading-history.tsx";
 
-import {useRSSFeeds} from "@/hooks/use-rss";
-import {useArticle} from "@/hooks/use-article";
-import {useViewCounter} from "@/hooks/use-view-counter";
-import {useEffect, useState} from "react";
-import type {Article} from "@/types/news";
-import {authorInfo} from "@/constant/author";
+import { useRSSFeeds } from "@/hooks/use-rss";
+import { useArticle } from "@/hooks/use-article";
+import { useViewCounter } from "@/hooks/use-view-counter";
+import { useEffect, useState } from "react";
+import type { Article } from "@/types/news";
+import { authorInfo } from "@/constant/author";
 import LoadingSpinner from "@/components/common/loading-spinner.tsx";
 import NotFound from "./not-found";
 import { cleanArticleContent } from "@/lib/clean";
@@ -103,6 +103,10 @@ export default function ArticlePage() {
               title={articleTitle}
               author={authorInfo.name}
               publishedAt={new Date(rssArticle.pubDate).toLocaleString("vi-VN")}
+<<<<<<< HEAD
+=======
+              url={window.location.href}
+>>>>>>> f8fa3b5 (enhance: replace video in home page and improve display time published news , using calendar api from calendarific)
             />
 
             <article className="mt-4">
