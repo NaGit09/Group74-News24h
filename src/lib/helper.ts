@@ -1,9 +1,10 @@
 import type { GoldPrice } from "@/types/gold-price";
 import type { RefObject } from "react";
+
+// Lấy ngày hôm nay và ngày hôm qua
 export function getTodayAndYesterday(data: GoldPrice[]) {
   if (data.length < 2) return null;
 
-  // clone + sort theo date tăng dần
   const sorted = [...data].sort(
     (a, b) => new Date(a.date).getTime() - new Date(b.date).getTime()
   );
@@ -14,17 +15,20 @@ export function getTodayAndYesterday(data: GoldPrice[]) {
   return { today, yesterday };
 }
 
+// Lấy ngày hôm qua
 export const getYesterday = (date: string) => {
   const d = new Date(date);
   d.setDate(d.getDate() - 1);
   return d.toISOString().slice(0, 10);
 };
 
+// Xử lý download biểu đồ giá vàng
 export const handleDownload = async (
   type: "png" | "jpeg" | "pdf" | "svg",
   brand: string,
   chartRef: RefObject<HTMLDivElement | null> | null
 ) => {
+
   if (!chartRef?.current) return;
 
   if (type === "svg") {
@@ -41,32 +45,42 @@ export const handleDownload = async (
   }
 
   const html2canvas = (await import("html2canvas-pro")).default;
+
   const canvas = await html2canvas(chartRef.current, { useCORS: true });
+
   const image = canvas.toDataURL(`image/${type}`, 1.0);
 
   if (type === "pdf") {
     const { jsPDF } = await import("jspdf");
+
     const pdf = new jsPDF({
       orientation: "landscape",
       unit: "px",
       format: [canvas.width, canvas.height],
     });
+
     pdf.addImage(image, "PNG", 0, 0, canvas.width, canvas.height);
+
     pdf.save(`gold-price-chart-${brand}.pdf`);
+
   } else {
+
     const link = document.createElement("a");
+
     link.href = image;
+
     link.download = `gold-price-chart-${brand}.${type}`;
+
     link.click();
   }
 };
 
+// Xử lý in biểu đồ giá vàng
 export const handlePrint = async (
   chartRef: RefObject<HTMLDivElement | null> | null
 ) => {
   if (!chartRef?.current) return;
 
-  // Open window immediately to avoid popup blocker
   const printWindow = window.open("", "_blank");
 
   if (!printWindow) {
@@ -77,11 +91,15 @@ export const handlePrint = async (
   printWindow.document.write("<div>Đang xử lý biểu đồ...</div>");
 
   try {
+
     const html2canvas = (await import("html2canvas-pro")).default;
+
     const canvas = await html2canvas(chartRef.current, { useCORS: true });
+
     const image = canvas.toDataURL("image/png");
 
     printWindow.document.open();
+
     printWindow.document.write(`
         <html>
           <head>
@@ -96,9 +114,37 @@ export const handlePrint = async (
           </body>
         </html>
       `);
+    
     printWindow.document.close();
   } catch (error) {
+
     console.error("Print failed", error);
+
     printWindow.close();
   }
 };
+
+// Xử lý in bài viết
+export const handlePrintArticle = async () => {
+  window.print();
+} 
+
+// Điều hướng khi nhấn nút gợi ý 
+export const navigateToComment = () => {
+  const commentsSection = document.getElementById("comments");
+  if (commentsSection) {
+    commentsSection.scrollIntoView({ behavior: "smooth" });
+  }
+}
+
+export const HoursAgo = (time: string) => {
+  const today = new Date().getTime();
+  const [hour, minute] = time.split(":");
+  const timeNow = new Date().setHours(Number(hour), Number(minute), 0, 0);
+  const diffMs = today - timeNow;
+  const hoursAgo = Math.floor(diffMs / (1000 * 60 * 60));
+  if (hoursAgo < 1) {
+    return "Mới đăng " + minute + " phút trước";
+  }
+  return hoursAgo + " giờ trước";
+}

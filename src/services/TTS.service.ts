@@ -5,7 +5,7 @@ export const createRecord = async (
   text: string
 ): Promise<TTSSuccessResponse> => {
   try {
-    const response = await axios.post("/api/tts", {
+    const response = await axios.post("/tts", {
       text,
       voice_id: "Lia",
       multiNativeLocale: "vi-VN",

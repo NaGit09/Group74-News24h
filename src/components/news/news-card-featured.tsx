@@ -1,6 +1,5 @@
 import { Link } from "react-router";
 import { ImageWithFallback } from "@/components/common/image-with-fallback";
-import { formatRelativeTime } from "@/lib/time";
 
 interface NewsCardFeaturedProps {
   title: string;
@@ -9,6 +8,7 @@ interface NewsCardFeaturedProps {
   category: string;
   href: string;
   publishedAt: string;
+  timestamp?: string;
 }
 
 export function NewsCardFeatured({
@@ -36,7 +36,7 @@ export function NewsCardFeatured({
             {sapo}
           </p>
           <time className="text-xs text-muted-foreground">
-            {formatRelativeTime(publishedAt)}
+            bài viết được đăng tải vào lúc {publishedAt}
           </time>
         </div>
       </article>

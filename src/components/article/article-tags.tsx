@@ -6,7 +6,7 @@ interface ArticleTagsProps {
 
 export function ArticleTags({ tags }: ArticleTagsProps) {
   return (
-    <div className="mt-8 border-t border-border pt-6">
+    <div id="comments" className="mt-8 border-t border-border pt-6">
       <div className="flex flex-wrap items-center gap-2">
         <span className="text-sm font-medium text-muted-foreground">Tags:</span>
         {tags.map((tag, index) => (

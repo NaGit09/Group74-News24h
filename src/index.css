@@ -157,12 +157,19 @@
   }
 
   /* Optimize page breaks */
-  h1, h2, h3, h4, h5, h6 {
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
     page-break-after: avoid;
     page-break-inside: avoid;
   }
 
-  img, figure, table {
+  img,
+  figure,
+  table {
     page-break-inside: avoid;
   }
 
@@ -174,6 +181,25 @@
   /* Show article metadata */
   .print-only {
     display: block !important;
+  }
+
+  /* Reset layout for print */
+  .container {
+    max-width: none !important;
+    width: 100% !important;
+    padding: 0 !important;
+    margin: 0 !important;
+  }
+
+  .grid {
+    display: block !important;
+  }
+
+  /* Ensure content takes full width */
+  .lg\:col-span-9,
+  .xl\:col-span-7 {
+    width: 100% !important;
+    max-width: none !important;
   }
 }
 

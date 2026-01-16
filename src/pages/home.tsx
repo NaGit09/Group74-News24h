@@ -2,6 +2,7 @@ import { NewsCardFeatured } from "@/components/news/news-card-featured.tsx";
 import { NewsCardSmall } from "@/components/news/news-card-small.tsx";
 import { NewsStack } from "@/components/news/news-stack.tsx";
 import { useEffect, useState } from "react";
+import VideoPlayer from "@/components/ui/video-player";
 
 import { SportWidget } from "@/components/widgets/sport-widget.tsx";
 
@@ -17,8 +18,7 @@ import { dataSample } from "@/lib/news";
 
 export default function HomePage() {
   const { articles, loading: rssLoading, error } = useRSSFeeds();
-  const [minimumLoading, setMinimumLoading] = useState(true);  
-
+  const [minimumLoading, setMinimumLoading] = useState(true);
   useEffect(() => {
     const timer = setTimeout(() => {
       setMinimumLoading(false);
@@ -71,10 +71,20 @@ export default function HomePage() {
                 Video nổi bật
               </h4>
               <div className="aspect-video overflow-hidden">
-                <img
-                  src="/news-video-thumbnail.png"
-                  alt="Video"
-                  className="h-full w-full object-cover"
+                <VideoPlayer
+                  options={{
+                    autoplay: true,
+                    controls: true,
+                    responsive: true,
+                    fluid: true,
+                    sources: [
+                      {
+                        src: "https://cdn.24h.com.vn/upload/1-2026/videoclip/2026-01-16/1768517573-racingsantander_barcelona_720p.m3u8",
+                        type: "application/x-mpegURL",
+                      },
+                    ],
+                  }}
+                  className="rounded-lg overflow-hidden"
                 />
               </div>
             </div>
@@ -86,7 +96,13 @@ export default function HomePage() {
 
         <CategoryBlock
           category="Bóng đá"
-          subTags={["Champions League", "Premier League", "La Liga", "Serie A", "Ligue 1"]}
+          subTags={[
+            "Champions League",
+            "Premier League",
+            "La Liga",
+            "Serie A",
+            "Ligue 1",
+          ]}
           featured={footballNews[0]}
           gridItems={footballNews}
         />

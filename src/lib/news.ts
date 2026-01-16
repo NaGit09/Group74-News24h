@@ -18,7 +18,9 @@ export const dataSample = (articles: Article[]) => {
                 minute: "2-digit",
                 day: "2-digit",
                 month: "2-digit",
+                year: "numeric",
             }),
+            timestamp: articles[0].pubDate,
         }
         : fallbackHeroNews;
 
@@ -35,6 +37,7 @@ export const dataSample = (articles: Article[]) => {
             minute: "2-digit",
             day: "2-digit",
             month: "2-digit",
+            year: "numeric",
         }),
     }));
 
@@ -47,6 +50,7 @@ export const dataSample = (articles: Article[]) => {
             minute: "2-digit",
             day: "2-digit",
             month: "2-digit",
+            year: "numeric",
         }),
     }));
 
@@ -72,6 +76,7 @@ export const dataSample = (articles: Article[]) => {
             minute: "2-digit",
             day: "2-digit",
             month: "2-digit",
+            year: "numeric",
         }),
     }));
 

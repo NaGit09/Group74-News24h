@@ -1,29 +1,6 @@
+import type { WeatherData } from "@/types/weather";
 
-export interface WeatherData {
-    current: {
-        temp: number;
-        status: string;
-        description: string;
-        humidity: number;
-        windSpeed: number;
-        uvIndex: number; // Open-Meteo free API doesn't always have UV in the basic set without extra params, I'll check or mock/omit
-        isDay: boolean;
-        weatherCode: number;
-    };
-    hourly: {
-        time: string;
-        temp: number;
-        status: string; // mapped code
-        weatherCode: number;
-    }[];
-    weekly: {
-        day: string;
-        tempHigh: number;
-        tempLow: number;
-        status: string; // mapped code
-        weatherCode: number;
-    }[];
-}
+
 
 const WMO_CODES: Record<number, { label: string; icon: string }> = {
     0: { label: "Trời quang", icon: "sun" },
@@ -62,14 +39,10 @@ export const fetchWeatherData = async (lat = 21.0285, lon = 105.8542): Promise<W
 
         const currentInfo = getWeatherCodeInfo(data.current.weather_code);
 
-        // Process Hourly (next 24h, take every 3 hours or just next 5 hours)
         const hourlyData = data.hourly.time
             .slice(0, 24)
             .map((time: string, index: number) => {
                 const date = new Date(time);
-                // Only take current and future hours, assume API returns logic sorted
-                // Actually open-meteo returns full history for the day too sometimes or starts from 00:00
-                // We'll just map roughly.
                 return {
                     time: date.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' }),
                     temp: Math.round(data.hourly.temperature_2m[index]),
@@ -78,18 +51,12 @@ export const fetchWeatherData = async (lat = 21.0285, lon = 105.8542): Promise<W
                 }
             })
             .filter((_: any, idx: number) => {
-                // Simple filter to get current hour onwards roughly? 
-                // For now let's just take the next 5 hours from the current time index if possible 
-                // Or simpler: just take the next 5 entries assuming fetch is relative to now? 
-                // Open Meteo API 'hourly' usually starts from 00:00 of the day.
-                // Let's find index of current hour
                 const nowHour = new Date().getHours();
                 const itemHour = new Date(data.hourly.time[idx]).getHours();
                 return itemHour >= nowHour;
             })
-            .slice(0, 6); // Take next 6 hours
+            .slice(0, 6);
 
-        // Process Daily
         const dailyData = data.daily.time.map((time: string, index: number) => {
             const date = new Date(time);
             const dayName = index === 0 ? "Hôm nay" : date.toLocaleDateString('vi-VN', { weekday: 'long' });
@@ -109,8 +76,7 @@ export const fetchWeatherData = async (lat = 21.0285, lon = 105.8542): Promise<W
                 description: `Dự báo: ${currentInfo.label}`,
                 humidity: data.current.relative_humidity_2m,
                 windSpeed: data.current.wind_speed_10m,
-                uvIndex: 0, // Not available in free fetching basic
-                isDay: !!data.current.is_day,
+                uvIndex: 0,
                 weatherCode: data.current.weather_code,
             },
             hourly: hourlyData,

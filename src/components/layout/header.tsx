@@ -18,13 +18,14 @@ import { SearchIcon } from "../ui/search.tsx";
 import { UserIcon } from "../ui/user.tsx";
 import { MenuIcon } from "../ui/menu.tsx";
 import { ChartLineIcon, type ChartLineIconHandle } from "../ui/chart-line.tsx";
+import { useWeather } from "@/hooks/use-weather.ts";
 
 export function Header() {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isDark, setIsDark] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
+  const {currentWeather} = useWeather();
   const calendarRef = useRef<CalendarDaysIconHandle>(null);
   const weatherRef = useRef<CloudSunIconHandle>(null);
   const goldRef = useRef<TrendingUpIconHandle>(null);
@@ -42,6 +43,8 @@ export function Header() {
     const isDarkMode = document.documentElement.classList.contains("dark");
     setIsDark(isDarkMode);
   }, []);
+ 
+
 
   const toggleDarkMode = () => {
     document.documentElement.classList.toggle("dark");
@@ -66,6 +69,7 @@ export function Header() {
             <div className="container mx-auto px-4">
               <div className="flex h-9 items-center justify-between gap-4 text-xs">
                 <div className="flex items-center gap-4 text-muted-foreground">
+                  
                   <Link
                     to="/lich-van-nien"
                     className="hidden md:inline-flex items-center gap-1 hover:text-primary transition-colors"
@@ -80,6 +84,7 @@ export function Header() {
                       year: "numeric",
                     })}
                   </Link>
+
                   <Link
                     to="/thoi-tiet"
                     className="hidden md:flex items-center gap-1 hover:text-primary transition-colors"
@@ -87,8 +92,9 @@ export function Header() {
                     onMouseLeave={() => weatherRef.current?.stopAnimation()}
                   >
                     <CloudSunIcon ref={weatherRef} size={18} />
-                    <span>Hà Nội 18°C</span>
+                    <span> Thủ Đức , Hồ Chí Minh , {currentWeather}°C</span>
                   </Link>
+
                   <Link
                     to="/gia-vang"
                     className="flex items-center gap-1 hover:text-primary transition-colors"

@@ -19,7 +19,7 @@ export function ArticleComments() {
   }, [dispatch, comments.length]);
 
   return (
-    <div className="mt-12 border-t border-border pt-8">
+    <div  className="mt-12 border-t border-border pt-8">
       <h2 className="mb-6 flex items-center gap-2 text-2xl font-bold text-foreground">
         <MessageSquare className="h-6 w-6" />
         Bình luận ({comments.length})
