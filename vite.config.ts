@@ -32,7 +32,7 @@ export default defineConfig(({ mode }) => {
         rewrite: (path) => path.replace(/^\/api\/rss/, "/rss"),
       },
       // Proxy handle tts
-      "/api/tts": {
+      "/tts": {
         target: "https://api.murf.ai/v1/speech/generate",
         changeOrigin: true,
         secure: false,
@@ -40,6 +40,9 @@ export default defineConfig(({ mode }) => {
         configure: (proxy) => {
           proxy.on("proxyReq", (proxyReq) => {
             proxyReq.setHeader("api-key", env.VITE_MURF_KEY);
+            proxyReq.setHeader("Content-Type", "application/json");
+            proxyReq.setHeader("Accept", "application/json");
+            proxyReq.setHeader("token", env.VITE_MURF_TOKEN);
           });
         },
       },

@@ -7,6 +7,7 @@ interface ArticleContentProps {
 }
 
 export const ArticleContent = memo(({ content }: ArticleContentProps) => {
+
   const [lightboxImage, setLightboxImage] = useState<string | null>(null);
   const contentRef = useRef<HTMLDivElement>(null);
 
@@ -20,13 +21,16 @@ export const ArticleContent = memo(({ content }: ArticleContentProps) => {
 
       const altText = img.getAttribute("alt");
       if (altText && altText.trim().length > 0) {
+
         const nextSibling = img.nextElementSibling;
+
         const isNextCaption =
           nextSibling?.tagName === "FIGCAPTION" ||
           (nextSibling?.tagName === "P" &&
             nextSibling?.classList.contains("image-caption"));
 
         const parent = img.parentElement;
+        
         const isFigureWrapped = parent?.tagName === "FIGURE";
 
         if (!isNextCaption && !isFigureWrapped) {
@@ -52,6 +56,7 @@ export const ArticleContent = memo(({ content }: ArticleContentProps) => {
   return (
     <>
       <div
+        id="article-content"
         ref={contentRef}
         className="article-content space-y-6 text-lg leading-8 text-foreground/90 
         [&_h2]:mt-10 [&_h2]:mb-6 [&_h2]:text-2xl [&_h2]:font-bold [&_h2]:tracking-tight [&_h2]:text-foreground
@@ -72,7 +77,7 @@ export const ArticleContent = memo(({ content }: ArticleContentProps) => {
 
       {lightboxImage && (
         <div
-          className="fixed inset-0 z-[60] flex items-center justify-center bg-black/95 p-4 backdrop-blur-sm"
+          className="fixed inset-0 z-60 flex items-center justify-center bg-black/95 p-4 backdrop-blur-sm"
           onClick={() => setLightboxImage(null)}
         >
           <button

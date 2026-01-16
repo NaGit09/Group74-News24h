@@ -3,6 +3,7 @@ import articleReducer from './article.store';
 import commentReducer from './comment.store';
 import goldReducer from './gold.store';
 import stockReducer from './stock.store';
+import weatherReducer from './weather.store';
 // register root store
 export const store = configureStore({
     reducer: {
@@ -10,6 +11,7 @@ export const store = configureStore({
         comment: commentReducer,
         gold: goldReducer,
         stock: stockReducer,
+        weather: weatherReducer,
     },
 });
 

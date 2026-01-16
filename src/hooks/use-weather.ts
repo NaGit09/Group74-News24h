@@ -1,26 +1,32 @@
-import { fetchWeatherData, type WeatherData } from "@/services/weather.service";
-import { useState } from "react";
+import { fetchWeatherData } from "@/services/weather.service";
 import { useEffect } from "react";
-export const useWeather = () => {
-    const [data, setData] = useState<WeatherData | null>(null);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
+import { useDispatch, useSelector } from "react-redux";
+import type { RootState } from "@/stores/root.store";
+import { setWeatherData, setLoading, setError } from "@/stores/weather.store";
 
+export const useWeather = () => {
+    const dispatch = useDispatch();
+    const { data, loading, error } = useSelector((state: RootState) => state.weather);
+    const currentWeather = data?.current.temp;
     useEffect(() => {
+        if (data) return;
+
         const loadWeather = async () => {
             try {
-                setLoading(true);
+                dispatch(setLoading(true));
                 const result = await fetchWeatherData();
-                setData(result);
+                dispatch(setWeatherData(result));
             } catch (err) {
-                setError("Không thể tải dữ liệu thời tiết");
+                dispatch(setError("Không thể tải dữ liệu thời tiết"));
             } finally {
-                setLoading(false);
+                dispatch(setLoading(false));
             }
         };
         loadWeather();
-    }, []);
+    }, [dispatch, data]);
+
     return {
+        currentWeather,
         data,
         loading,
         error

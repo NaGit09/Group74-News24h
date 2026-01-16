@@ -18,6 +18,7 @@ import { FontSizeAdjuster } from "@/components/widgets/font-size-adjuster.tsx";
 import { useEffect, useState, useMemo } from "react";
 import { calculateReadingTime, formatReadingTime } from "@/lib/time";
 import { tssReader } from "@/lib/tssReader";
+import { handlePrintArticle, navigateToComment } from "@/lib/helper";
 
 interface ArticleMetaProps {
   author: string;
@@ -55,6 +56,7 @@ export function ArticleMeta({
     }
   }, []);
 
+  
   const handleTextToSpeech = async () => {
     if (!articleContent) return;
 
@@ -120,10 +122,6 @@ export function ArticleMeta({
     }
   };
 
-  const handlePrint = () => {
-    window.print();
-  };
-
   const handleSaveArticle = () => {
     if (typeof window === "undefined") return;
 
@@ -152,6 +150,7 @@ export function ArticleMeta({
       setIsSaved(true);
     }
   };
+
 
   return (
     <div className="mt-4 border-y border-border py-4">
@@ -195,7 +194,12 @@ export function ArticleMeta({
           {isSaved ? "Đã lưu" : "Lưu bài viết"}
         </Button>
 
-        <Button variant="outline" size="sm" className="gap-2 bg-transparent">
+        <Button
+          onClick={navigateToComment}
+          variant="outline"
+          size="sm"
+          className="gap-2 bg-transparent"
+        >
           <MessageCircle className="h-4 w-4" />
           Góp ý
         </Button>
@@ -222,7 +226,7 @@ export function ArticleMeta({
         <Button
           variant="outline"
           size="sm"
-          onClick={handlePrint}
+          onClick={handlePrintArticle}
           className="gap-2 bg-transparent"
         >
           <Printer className="h-4 w-4" />
